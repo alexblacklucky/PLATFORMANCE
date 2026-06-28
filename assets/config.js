@@ -1,6 +1,7 @@
-window.PLATFORMANCE_CONFIG = {
-  // Вставьте URL webhook из n8n, Make, Bitrix24 или другой CRM.
-  // Пример: "https://your-n8n-domain.com/webhook/platformance-lead"
-  webhookUrl: "",
-  thankYouPage: "thank-you.html"
-};
+window.PLATFORMANCE_CONFIG={webhookUrl:"",thankYouPage:"thank-you.html"};
+(()=>{
+ const version='6';
+ ['v2-0.css','v2-1.css','v2-2a.css','v2-2b1.css','v2-2b2.css','v2-3a.css','v2-3b.css','v2-4b.css','v2-4c.css','v2-4d1.css','mobile-v2.css','v2-visible.css'].forEach(file=>{const link=document.createElement('link');link.rel='stylesheet';link.href=`assets/${file}?v=${version}`;document.head.append(link)});
+ const files=['v2-dom-0.js','v2-dom-1-1.js','v2-dom-1-2.js','v2-dom-2-2.js','v2-dom-2-3.js','v2-dom-2-4.js','v2-dom-3-2.js','v2-patches.js','v2-patches-more.js','v2-motion.js'];
+ (async()=>{for(const file of files){try{await import(`./${file}?v=${version}`)}catch(error){console.error('V2 asset error',file,error)}}})();
+})();
