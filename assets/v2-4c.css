@@ -1,0 +1,10 @@
+/* Audit */
+.site-v2 .audit-section-premium{background:linear-gradient(145deg,#211957,#30247c 60%,#181344);color:#fff;position:relative;overflow:hidden}
+.site-v2 .audit-section-premium:before{content:"";position:absolute;width:700px;height:700px;border-radius:50%;left:-280px;bottom:-350px;background:radial-gradient(circle,rgba(118,84,246,.3),transparent 70%)}
+.site-v2 .audit-section-premium .audit-grid{grid-template-columns:.95fr 1.05fr;gap:42px;position:relative}
+.site-v2 .audit-section-premium .audit-info h2{font-size:clamp(40px,4.4vw,61px);line-height:1.05;letter-spacing:-.05em}.site-v2 .audit-section-premium .audit-lead{font-size:19px;line-height:1.7;color:#d4cee6}
+.site-v2 .audit-section-premium .audit-points>div{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}.site-v2 .audit-section-premium .audit-points p{color:#d3cde7}.site-v2 .audit-section-premium .audit-points span{color:#bfb4ff}
+.site-v2 .audit-deliverable{margin-top:20px;padding:20px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.site-v2 .audit-deliverable>span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#bfb4ff}.site-v2 .audit-deliverable>div{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.site-v2 .audit-deliverable b{padding:9px 11px;border-radius:999px;background:rgba(255,255,255,.09);font-size:12px}
+.site-v2 .audit-section-premium .safe-step{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)}.site-v2 .audit-section-premium .safe-step p{color:#ccc6df}
+.site-v2 .audit-section-premium .form-card{border-radius:26px;padding:32px;box-shadow:0 40px 100px rgba(0,0,0,.28)}
+.site-v2 .form-card-head h2{font-size:34px}.site-v2 .lead-form label>span{font-size:13px}.site-v2 .lead-form input,.site-v2 .lead-form select,.site-v2 .lead-form textarea{font-size:15px;min-height:52px}
