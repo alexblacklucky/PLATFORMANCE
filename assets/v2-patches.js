@@ -1,0 +1,9 @@
+(()=>{
+ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+ const problems=q('#problems');if(problems){problems.classList.add('problems-section');q('.problem-grid',problems)?.classList.add('problem-grid-rich');qa('.problem-card',problems).forEach((c,i)=>{if(!q('.problem-icon',c)){const d=document.createElement('div');d.className='problem-icon';d.textContent=['₽','↗','□','◎','≡','◆'][i]||'•';c.insertBefore(d,c.querySelector('h3'));}if(!c.querySelector(':scope>em')){const e=document.createElement('em');e.textContent='Решения по этой зоне связываются с общей экономикой и планом магазина.';c.append(e);}});q('.insight',problems)?.classList.add('insight-rich');}
+ const cases=q('#cases');if(cases){cases.classList.add('cases-section');q('.case-grid',cases)?.classList.add('case-grid-rich');}
+ const audit=q('#audit');if(audit){audit.classList.add('audit-section-premium');if(!q('.audit-deliverable',audit)){const d=document.createElement('div');d.className='audit-deliverable';d.innerHTML='<span>После разговора вы получите</span><div><b>Карту проблем</b><b>Приоритетные действия</b><b>Подходящий формат работы</b></div>';q('.safe-step',audit)?.before(d);}}
+ const cta=q('section.cta-band');if(cta){cta.classList.add('cta-band-premium');if(!q('.cta-mini',cta)){const d=document.createElement('div');d.className='cta-mini';d.innerHTML='<span>Wildberries</span><span>Ozon</span><span>Комплексное ведение</span>';q('.cta-band-inner>div',cta)?.append(d);}}
+ const contacts=q('#contacts');if(contacts){contacts.classList.add('contacts-section-premium');q('.contact-grid',contacts)?.classList.add('contact-grid-rich');qa('.contact-card',contacts).forEach((c,i)=>{if(i===3)c.classList.add('contact-card-accent');});}
+ document.body.classList.add('site-v2');
+})();
