@@ -1,0 +1,1 @@
+PV2.cls('signal-strip',"<section class=\"signal-strip audience-strip\"><div class=\"container\"><p>Работаем как внешний отдел маркетплейсов для</p><div><span>Производителей</span><span>Дистрибьюторов</span><span>Товарных брендов</span><span>Действующих продавцов</span></div></div></section>");
