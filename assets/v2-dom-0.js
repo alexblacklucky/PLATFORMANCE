@@ -1,0 +1,1 @@
+window.PV2=window.PV2||{};PV2.replace=(selector,html)=>{const n=document.querySelector(selector);if(!n)return;const t=document.createElement('template');t.innerHTML=html.trim();n.replaceWith(t.content.firstElementChild);};PV2.id=(id,html)=>PV2.replace('#'+CSS.escape(id),html);PV2.cls=(name,html)=>PV2.replace('section.'+name,html);document.body.classList.add('site-v2');
