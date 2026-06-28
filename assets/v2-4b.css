@@ -1,0 +1,8 @@
+/* Comparison */
+.site-v2 #comparison{background:#fff}
+.site-v2 .comparison-wrap{border-radius:24px;overflow:hidden;box-shadow:0 24px 70px rgba(37,30,99,.08);border:1px solid #e8e3f2}
+.site-v2 .comparison-row{min-height:78px}.site-v2 .comparison-row>*{padding:20px 18px;font-size:15px}.site-v2 .comparison-head>*{font-size:13px}.site-v2 .comparison-row .highlight{background:#f0ecff;color:#4d35b7;font-weight:800}
+/* FAQ */
+.site-v2 .faq-section{background:#f7f6fb}
+.site-v2 .faq-item{border-radius:17px;margin-bottom:10px;border:1px solid #e8e3f2;background:#fff}
+.site-v2 .faq-item summary{padding:21px 22px;font-size:17px}.site-v2 .faq-item div p{font-size:16px;line-height:1.7}
