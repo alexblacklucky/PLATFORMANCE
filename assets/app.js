@@ -136,6 +136,7 @@
       if(url.value && !/^https?:\/\//i.test(url.value)){ url.closest('label')?.classList.add('has-error'); valid = false; }
       if(!valid){ errorBox.textContent = 'Проверьте обязательные поля и формат данных.'; form.querySelector('.has-error input, .has-error textarea, .has-error select')?.focus(); return; }
       if(form.elements.company_website.value) return;
+      if(form.elements.consent_given_at) form.elements.consent_given_at.value = new Date().toISOString();
       const submit = form.querySelector('button[type="submit"]'); const original = submit.innerHTML;
       submit.disabled = true; submit.innerHTML = '<span>Отправляем…</span>';
       const payload = Object.fromEntries(new FormData(form).entries()); delete payload.company_website; payload.created_at = new Date().toISOString();
@@ -161,4 +162,18 @@
     const target = $(a.getAttribute('href')); if(!target) return;
     e.preventDefault(); target.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
   }));
+
+  const cookieKey = 'platformance_cookie_consent';
+  if (!storage.get('localStorage', cookieKey)) {
+    const banner = document.createElement('div');
+    banner.className = 'cookie-banner';
+    banner.setAttribute('role','dialog');
+    banner.setAttribute('aria-label','Уведомление об использовании cookie');
+    banner.innerHTML = '<p>Сайт использует cookie и аналитику для работы и улучшения сервиса. Подробности — в <a href="privacy.html#cookies">политике конфиденциальности</a>.</p><button type="button" class="btn btn-sm btn-primary" data-cookie-accept>Принять</button>';
+    document.body.appendChild(banner);
+    $('[data-cookie-accept]', banner).addEventListener('click', () => {
+      storage.set('localStorage', cookieKey, '1');
+      banner.remove();
+    });
+  }
 })();
