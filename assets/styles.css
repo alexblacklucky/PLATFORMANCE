@@ -18,3 +18,7 @@
   .system-node svg{width:20px;height:20px}
   .n1{left:0;top:32px}.n2{right:0;top:32px}.n3{left:0;bottom:32px}.n4{right:0;bottom:32px}
 }
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:1000;background:#17133f;color:#fff;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 20px 50px rgba(15,11,40,.35);max-width:680px;margin:0 auto}
+.cookie-banner p{margin:0;font-size:13px;color:#d8d3e9;flex:1 1 260px}
+.cookie-banner a{color:#fff;text-decoration:underline}
+.cookie-banner button{flex:0 0 auto}
