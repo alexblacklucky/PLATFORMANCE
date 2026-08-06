@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VILLET — Аналитика</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<script src="../assets/vendor/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #f5f4f0;
+  --bg2: #ffffff;
+  --bg3: #eceae4;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --blue: #2563eb;
+  --green: #16a34a;
+  --red: #dc2626;
+  --yellow: #d97706;
+  --ink: #1a1a2e;
+  --muted: #8b8fa8;
+  --muted2: #6b7280;
+  --mono: 'DM Mono', monospace;
+  --body: 'DM Sans', sans-serif;
+  --serif: 'Playfair Display', serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:radial-gradient(circle,rgba(0,0,0,0.055) 1px,transparent 1px);background-size:24px 24px;pointer-events:none}
+.page{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:0 32px 72px}
+
+/* HEADER */
+.hdr{padding:32px 0 24px;border-bottom:1.5px solid var(--border2);display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.hdr-brand h1{font-family:var(--serif);font-size:56px;letter-spacing:-1px;color:var(--ink);line-height:1}
+.hdr-brand .sub{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.hdr-stats{display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap}
+.hstat{text-align:right}
+.hstat .v{font-family:var(--mono);font-size:20px;font-weight:500}
+.hstat .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:1px}
+
+/* MONTH FILTER */
+.mf-bar{display:flex;align-items:center;gap:12px;padding:18px 0 0;border-bottom:1.5px solid var(--border2);flex-wrap:wrap}
+.mf-label{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.mf-btn{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:1px;
+  padding:8px 20px;border-radius:8px;cursor:pointer;
+  border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);
+  transition:all .18s;
+}
+.mf-btn:hover{border-color:var(--blue);color:var(--blue)}
+.mf-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,0.25)}
+.mf-divider{width:1px;height:24px;background:var(--border2);margin:0 4px}
+.mf-info{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto}
+
+/* NAV */
+.nav{display:flex;gap:2px;padding:18px 0 0}
+.nav-tab{padding:9px 20px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--muted);border:none;border-bottom:2px solid transparent;background:none;transition:all .18s}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* SECTIONS */
+.sec{display:none;padding-top:26px}
+.sec.active{display:block}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.g64{display:grid;grid-template-columns:3fr 2fr;gap:13px}
+.g73{display:grid;grid-template-columns:7fr 3fr;gap:13px}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05),0 4px 14px rgba(0,0,0,0.04);animation:fadeUp .35s ease both}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(37,99,235,0.12),transparent)}
+.ctitle{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:13px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* METRIC */
+.metric .num{font-family:var(--mono);font-size:28px;font-weight:500;line-height:1;margin-bottom:5px}
+.metric .lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.metric .delta{font-family:var(--mono);font-size:11px;margin-top:6px;padding:2px 7px;border-radius:4px;display:inline-block}
+.du{background:rgba(22,163,74,.1);color:#15803d}
+.dd{background:rgba(220,38,38,.09);color:#b91c1c}
+.dw{background:rgba(217,119,6,.1);color:#b45309}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:0 10px 10px;text-align:right;font-weight:600;border-bottom:1.5px solid var(--border2)}
+.tbl th:first-child{text-align:left}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;text-align:right;color:var(--muted2)}
+.tbl td:first-child{text-align:left;color:var(--ink);font-weight:500}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(37,99,235,.03)}
+.art{font-size:13px!important;font-weight:600!important;color:var(--blue)!important}
+.pos{color:var(--green)!important}
+.neg{color:var(--red)!important}
+.wrn{color:var(--yellow)!important}
+
+/* BADGE */
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 8px;border-radius:4px}
+.br{background:rgba(220,38,38,.1);color:#b91c1c;border:1px solid rgba(220,38,38,.2)}
+.by{background:rgba(217,119,6,.1);color:#b45309;border:1px solid rgba(217,119,6,.2)}
+.bg{background:rgba(22,163,74,.1);color:#15803d;border:1px solid rgba(22,163,74,.2)}
+.bb{background:rgba(37,99,235,.08);color:#1d4ed8;border:1px solid rgba(37,99,235,.15)}
+.bk{background:rgba(0,0,0,.05);color:var(--muted2);border:1px solid var(--border2)}
+
+/* ACTION CARDS */
+.ac{border-radius:10px;padding:13px 15px;margin-bottom:8px;border-left:3px solid}
+.ac-r{background:rgba(220,38,38,.05);border-color:var(--red)}
+.ac-y{background:rgba(217,119,6,.05);border-color:var(--yellow)}
+.ac-g{background:rgba(22,163,74,.05);border-color:var(--green)}
+.ac-b{background:rgba(37,99,235,.05);border-color:var(--blue)}
+.ac h4{font-size:12px;font-weight:700;margin-bottom:3px}
+.ac p{font-size:11px;color:var(--muted2);line-height:1.5}
+
+/* COST ROW */
+.crow{display:flex;align-items:center;gap:10px;padding:7px 0}
+.crow .cn{flex:0 0 130px;font-size:12px;color:var(--muted2)}
+.crow .cb{flex:1;height:5px;background:rgba(0,0,0,.07);border-radius:3px;overflow:hidden}
+.crow .cv{font-family:var(--mono);font-size:12px;min-width:55px;text-align:right}
+
+/* FUNNEL STEPS */
+.funnel{display:flex}
+.fstep{flex:1;text-align:center;padding:16px 6px;border-right:1px solid var(--border);position:relative}
+.fstep:last-child{border-right:none}
+.fstep .fv{font-family:var(--mono);font-size:20px;font-weight:500;margin-bottom:4px}
+.fstep .fl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.fstep .fc{font-family:var(--mono);font-size:11px;color:var(--blue);margin-top:3px}
+.farr{position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);z-index:2}
+
+/* PLAN ITEM */
+.pi{display:flex;gap:13px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border)}
+.pi:last-child{border-bottom:none}
+.pn{font-family:var(--serif);font-size:24px;color:rgba(0,0,0,.1);min-width:30px;line-height:1;padding-top:2px}
+.pi h4{font-size:13px;font-weight:600;margin-bottom:2px}
+.pi p{font-size:11px;color:var(--muted2);line-height:1.5}
+
+.sep{height:1px;background:var(--border);margin:20px 0}
+.chart-wrap{position:relative}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-brand">
+    <h1>VILLET</h1>
+    <div class="sub" id="hdr-period">Аналитика магазина · Wildberries 2026</div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hstat"><div class="v" id="h-revenue">—</div><div class="l">Выручка</div></div>
+    <div class="hstat"><div class="v" id="h-profit" style="color:var(--green)">—</div><div class="l">Вал. прибыль</div></div>
+    <div class="hstat"><div class="v" id="h-margin">—</div><div class="l">Рентабельность</div></div>
+    <div class="hstat"><div class="v" id="h-ads" style="color:var(--yellow)">—</div><div class="l">Расход реклама</div></div>
+    <div class="hstat"><div class="v" id="h-drr" style="color:var(--blue)">—</div><div class="l">ДРР</div></div>
+  </div>
+</div>
+
+<!-- MONTH FILTER -->
+<div class="mf-bar">
+  <span class="mf-label">Период:</span>
+  <button class="mf-btn" data-m="feb" onclick="setMonth('feb',this)">Февраль 2026</button>
+  <button class="mf-btn" data-m="mar" onclick="setMonth('mar',this)">Март 2026 (1–18)</button>
+  <div class="mf-divider"></div>
+  <button class="mf-btn active" data-m="all" onclick="setMonth('all',this)">Фев + Март</button>
+  <span class="mf-info" id="mf-note">Показаны данные за оба месяца</span>
+</div>
+
+<!-- NAV -->
+<div class="nav" style="border-bottom:1.5px solid var(--border2)">
+  <button class="nav-tab active" onclick="showTab('overview',this)">Обзор</button>
+  <button class="nav-tab" onclick="showTab('finance',this)">Финансы</button>
+  <button class="nav-tab" onclick="showTab('funnel',this)">Воронка</button>
+  <button class="nav-tab" onclick="showTab('ads',this)">Реклама</button>
+  <button class="nav-tab" onclick="showTab('stock',this)">Остатки</button>
+  <button class="nav-tab" onclick="showTab('products',this)">Товары</button>
+  <button class="nav-tab" onclick="showTab('plan',this)">План действий</button>
+</div>
+
+<!-- ═══════ OVERVIEW ═══════ -->
+<div id="sec-overview" class="sec active">
+  <div class="g4" style="margin-bottom:13px">
+    <div class="card metric"><div class="lbl">Выручка</div><div class="num" id="ov-revenue">—</div><div class="delta" id="ov-revenue-d"></div></div>
+    <div class="card metric"><div class="lbl">Валовая прибыль</div><div class="num" id="ov-profit" style="color:var(--green)">—</div><div class="delta" id="ov-margin-d"></div></div>
+    <div class="card metric"><div class="lbl">Продано единиц</div><div class="num" id="ov-units">—</div><div class="delta" id="ov-units-d"></div></div>
+    <div class="card metric"><div class="lbl">К переводу на р/с</div><div class="num" id="ov-transfer">—</div></div>
+  </div>
+  <div class="g4" style="margin-bottom:13px">
+    <div class="card metric"><div class="lbl">Расход реклама</div><div class="num" id="ov-ads" style="color:var(--blue)">—</div></div>
+    <div class="card metric"><div class="lbl">ДРР (рекл/выручка)</div><div class="num" id="ov-drr" style="color:var(--green)">—</div></div>
+    <div class="card metric"><div class="lbl">Средний CPO</div><div class="num" id="ov-cpo">—</div></div>
+    <div class="card metric"><div class="lbl">Процент выкупа</div><div class="num" style="color:var(--green)">85%</div><div class="delta du">▲ с 84%</div></div>
+  </div>
+  <div class="g64" style="margin-bottom:13px">
+    <div class="card">
+      <div class="ctitle">Выручка и валовая прибыль по неделям</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="weeklyChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Структура расходов от выручки</div>
+      <div id="cost-rows"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Критические сигналы — требуют действий</div>
+    <div class="g3" id="alerts-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════ FINANCE ═══════ -->
+<div id="sec-finance" class="sec">
+  <div class="g4" style="margin-bottom:13px">
+    <div class="card metric"><div class="lbl">Выручка</div><div class="num" id="fi-revenue">—</div></div>
+    <div class="card metric"><div class="lbl">Себестоимость</div><div class="num" id="fi-cogs" style="color:var(--red)">—</div></div>
+    <div class="card metric"><div class="lbl">Комиссии WB</div><div class="num" id="fi-comm" style="color:var(--red)">—</div></div>
+    <div class="card metric"><div class="lbl">Валовая прибыль</div><div class="num" id="fi-profit" style="color:var(--green)">—</div></div>
+  </div>
+  <div class="g64" style="margin-bottom:13px">
+    <div class="card">
+      <div class="ctitle">Отчёт о прибылях и убытках</div>
+      <table class="tbl" id="pnl-table"></table>
+    </div>
+    <div class="card">
+      <div class="ctitle">Прибыль по неделям</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="profitChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Топ товаров по валовой прибыли</div>
+    <table class="tbl" id="top-products-table"></table>
+  </div>
+</div>
+
+<!-- ═══════ FUNNEL ═══════ -->
+<div id="sec-funnel" class="sec">
+  <div class="card" style="margin-bottom:13px">
+    <div class="ctitle">Воронка продаж</div>
+    <div class="funnel" id="funnel-steps"></div>
+  </div>
+  <div class="g64" style="margin-bottom:13px">
+    <div class="card">
+      <div class="ctitle">Конверсия по товарам</div>
+      <table class="tbl" id="funnel-table"></table>
+    </div>
+    <div class="card">
+      <div class="ctitle">Сравнение периодов</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="funnelChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ADS ═══════ -->
+<div id="sec-ads" class="sec">
+  <div class="g5" style="margin-bottom:13px">
+    <div class="card metric"><div class="lbl">Расход</div><div class="num" id="ad-spend">—</div></div>
+    <div class="card metric"><div class="lbl">ДРР</div><div class="num" id="ad-drr" style="color:var(--green)">—</div></div>
+    <div class="card metric"><div class="lbl">Средний CPO</div><div class="num" id="ad-cpo">—</div></div>
+    <div class="card metric"><div class="lbl">Заказов (ДСП)</div><div class="num" id="ad-orders">—</div></div>
+    <div class="card metric"><div class="lbl">V8H7 (убыток)</div><div class="num" id="ad-v8" style="color:var(--red)">—</div></div>
+  </div>
+  <div class="card" style="margin-bottom:13px">
+    <div class="ctitle">CPO и ДРР по артикулам</div>
+    <table class="tbl" id="ads-table"></table>
+  </div>
+  <div class="card">
+    <div class="ctitle">CPO визуализация</div>
+    <div class="chart-wrap" style="height:260px"><canvas id="cpoChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════ STOCK ═══════ -->
+<div id="sec-stock" class="sec">
+  <div class="g4" style="margin-bottom:13px">
+    <div class="card metric"><div class="lbl">Срочно (≤7 дней)</div><div class="num" style="color:var(--red)">4 товара</div></div>
+    <div class="card metric"><div class="lbl">Критично (8–14 дней)</div><div class="num" style="color:var(--yellow)">5 товаров</div></div>
+    <div class="card metric"><div class="lbl">Пополнить (15–30 дней)</div><div class="num" style="color:var(--blue)">9 товаров</div></div>
+    <div class="card metric"><div class="lbl">В норме (30+ дней)</div><div class="num" style="color:var(--green)">8 товаров</div></div>
+  </div>
+  <div class="card" style="margin-bottom:13px">
+    <div class="ctitle">Остатки на складе — 18.03.2026</div>
+    <table class="tbl">
+      <thead><tr><th>Артикул</th><th>Склад WB</th><th>В пути</th><th>Возвр.</th><th>Всего</th><th>Зак/день</th><th>Дней (склад)</th><th>Везти шт</th><th>Статус</th></tr></thead>
+      <tbody>
+        <tr><td class="art">2110-70W</td><td class="neg">17</td><td>17</td><td>9</td><td>43</td><td>5.4</td><td class="neg">3 дня</td><td class="neg">120</td><td><span class="badge br">СЕГОДНЯ</span></td></tr>
+        <tr><td class="art">H-005</td><td class="neg">29</td><td>11</td><td>2</td><td>42</td><td>4.8</td><td class="neg">6 дней</td><td class="neg">101</td><td><span class="badge br">СЕГОДНЯ</span></td></tr>
+        <tr><td class="art">2110-40W</td><td class="neg">0</td><td>4</td><td>0</td><td>4</td><td>0.4</td><td class="neg">0 дней!</td><td>8</td><td><span class="badge br">ПУСТО</span></td></tr>
+        <tr><td class="art">G0237</td><td class="neg">5</td><td>7</td><td>0</td><td>12</td><td>0.7</td><td class="neg">7 дней</td><td>10</td><td><span class="badge br">СРОЧНО</span></td></tr>
+        <tr><td class="art">WD-015(PRO)</td><td class="wrn">36</td><td>5</td><td>0</td><td>41</td><td>4.8</td><td class="wrn">8 дней</td><td class="wrn">102</td><td><span class="badge by">НЕДЕЛЯ</span></td></tr>
+        <tr><td class="art">WD-028(PRO)</td><td class="wrn">22</td><td>0</td><td>0</td><td>22</td><td>2.3</td><td class="wrn">10 дней</td><td class="wrn">46</td><td><span class="badge by">НЕДЕЛЯ</span></td></tr>
+        <tr><td class="art">G0249-70W</td><td class="wrn">27</td><td>12</td><td>6</td><td>45</td><td>2.7</td><td class="wrn">10 дней</td><td class="wrn">37</td><td><span class="badge by">НЕДЕЛЯ</span></td></tr>
+        <tr><td class="art">WD-2110</td><td class="wrn">24</td><td>9</td><td>2</td><td>35</td><td>2.1</td><td class="wrn">12 дней</td><td class="wrn">28</td><td><span class="badge by">НЕДЕЛЯ</span></td></tr>
+        <tr><td class="art">2170-70W</td><td class="wrn">33</td><td>9</td><td>3</td><td>45</td><td>2.4</td><td class="wrn">14 дней</td><td>27</td><td><span class="badge by">2 НЕД</span></td></tr>
+        <tr><td class="art">WD-015</td><td>82</td><td>17</td><td>3</td><td>102</td><td>4.8</td><td>17 дней</td><td>41</td><td><span class="badge bb">ПЛАН</span></td></tr>
+        <tr><td class="art">WD-067</td><td>27</td><td>5</td><td>1</td><td>33</td><td>1.5</td><td>18 дней</td><td>13</td><td><span class="badge bb">ПЛАН</span></td></tr>
+        <tr><td class="art">WD-028</td><td>62</td><td>7</td><td>0</td><td>69</td><td>2.3</td><td>27 дней</td><td>30</td><td><span class="badge bb">ПЛАН</span></td></tr>
+        <tr><td class="art">2190-70W</td><td>68</td><td>6</td><td>7</td><td>81</td><td>2.5</td><td>27 дней</td><td>30</td><td><span class="badge bb">ПЛАН</span></td></tr>
+        <tr><td class="art">WD-024</td><td>103</td><td>3</td><td>0</td><td>106</td><td>1.3</td><td class="pos">76 дней</td><td>0</td><td><span class="badge bg">НОРМА</span></td></tr>
+        <tr><td class="art">G0056-2шт</td><td>134</td><td>9</td><td>1</td><td>144</td><td>3.3</td><td class="pos">40 дней</td><td>0</td><td><span class="badge bg">НОРМА</span></td></tr>
+        <tr><td class="art">778-70W</td><td>49</td><td>6</td><td>3</td><td>58</td><td>1.2</td><td class="pos">40 дней</td><td>0</td><td><span class="badge bg">НОРМА</span></td></tr>
+        <tr><td class="art">V8H7</td><td>74</td><td>0</td><td>2</td><td>76</td><td>0.6</td><td class="pos">122 дня</td><td>0</td><td><span class="badge bk">СТОП РЕКЛ</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="ctitle">Дней запаса — визуальная шкала</div>
+    <div id="stockBars"></div>
+  </div>
+</div>
+
+<!-- ═══════ PRODUCTS ═══════ -->
+<div id="sec-products" class="sec">
+  <div class="card">
+    <div class="ctitle">Все артикулы — сводная таблица</div>
+    <div style="overflow-x:auto"><table class="tbl" id="products-table"></table></div>
+  </div>
+</div>
+
+<!-- ═══════ PLAN ═══════ -->
+<div id="sec-plan" class="sec">
+  <div class="card" style="margin-bottom:13px">
+    <div class="ctitle">Приоритизированный план действий</div>
+    <div class="g3">
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--red);font-weight:700;margin-bottom:10px">🔴 СДЕЛАТЬ СЕГОДНЯ</div>
+        <div class="ac ac-r"><h4 style="color:var(--red)">1. Везти 2110-70W — 120 шт</h4><p>Склад 17 шт = 3 дня. 5.4 заказа/день. Топ-1 продаж + лучшая реклама CPO 153₽. Каждый день простоя = ~9 800₽ выручки.</p></div>
+        <div class="ac ac-r"><h4 style="color:var(--red)">2. Везти H-005 — 100 шт</h4><p>Склад 29 шт = 6 дней. 4.8 заказа/день. CPO рекламы 127₽. Звуковой сигнал — стабильный топ.</p></div>
+        <div class="ac ac-r"><h4 style="color:var(--red)">3. Остановить рекламу V8H7</h4><p>CPO 1 068₽, ДРР 23%. Потрачено 29 896₽. На складе 74 шт = 122 дня органики. Отключить немедленно.</p></div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--yellow);font-weight:700;margin-bottom:10px">🟠 НА ЭТОЙ НЕДЕЛЕ</div>
+        <div class="ac ac-y"><h4 style="color:var(--yellow)">4. Везти WD-015(PRO) — 100 шт</h4><p>8 дней остатка, 4.8/день. Взять из той же партии что и 2110-70W.</p></div>
+        <div class="ac ac-y"><h4 style="color:var(--yellow)">5. WD-028(PRO) 50шт + G0249-70W 40шт + WD-2110 30шт</h4><p>10–12 дней. Объединить в одну поставку.</p></div>
+        <div class="ac ac-y"><h4 style="color:var(--yellow)">6. Разобраться с G0238 (убыток)</h4><p>Единственный убыточный товар. Проверить себестоимость, поднять цену до 2 000₽.</p></div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--green);font-weight:700;margin-bottom:10px">🟢 В БЛИЖАЙШИЕ 2 НЕДЕЛИ</div>
+        <div class="ac ac-g"><h4 style="color:var(--green)">7. Масштабировать рекламу WD-015 ×3</h4><p>CPO 61₽, ДРР 1.1%. Потенциал +80 заказов/мес = +287К выручки при увеличении с 13К до 39К бюджета.</p></div>
+        <div class="ac ac-g"><h4 style="color:var(--green)">8. WD-067 и WD-012 — бюджет ×5</h4><p>CPO 76–83₽, ДРР менее 1.5%. Совокупно +200 заказов/мес при инвестиции по 20К каждый.</p></div>
+        <div class="ac ac-b"><h4 style="color:var(--blue)">9. Пополнить WD-015, WD-028, 2190-70W</h4><p>17–27 дней остатка. 30–40 шт каждый. Не допустить обнуления при активной рекламе.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:13px">
+    <div class="ctitle">Детальный план по каждому артикулу</div>
+    <div style="overflow-x:auto"><table class="tbl" id="plan-table"></table></div>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <div class="ctitle">Потенциал от пополнения складов</div>
+      <div class="pi"><div class="pn">01</div><div><h4 style="color:var(--green)">+~138 000 ₽/мес</h4><p>2110-70W: 5.4 зак/день × 1 824₽ × 14 дней простоя</p></div></div>
+      <div class="pi"><div class="pn">02</div><div><h4 style="color:var(--green)">+~108 000 ₽/мес</h4><p>H-005: 4.8 зак/день × 1 603₽ × 14 дней простоя</p></div></div>
+      <div class="pi"><div class="pn">03</div><div><h4 style="color:var(--blue)">Итого: +250–300К/мес</h4><p>Только за счёт устранения дефицита топ-товаров</p></div></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Потенциал от оптимизации рекламы</div>
+      <div class="pi"><div class="pn">01</div><div><h4 style="color:var(--red)">−29 900 ₽ экономия</h4><p>Остановка V8H7 без потери органических продаж</p></div></div>
+      <div class="pi"><div class="pn">02</div><div><h4 style="color:var(--green)">WD-015 ×3 = +287К выручки</h4><p>CPO 61₽, маржа 556₽/шт — масштабирование выгодно</p></div></div>
+      <div class="pi"><div class="pn">03</div><div><h4 style="color:var(--green)">WD-067+WD-012 ×5 = +200 зак</h4><p>ДРР менее 1.5% — одни из лучших кампаний</p></div></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Итоговый эффект при выполнении плана</div>
+      <div class="pi"><div class="pn">01</div><div><h4 style="color:var(--blue)">Выручка: +500–700К/мес</h4><p>Восстановление + масштабирование эффективной рекламы</p></div></div>
+      <div class="pi"><div class="pn">02</div><div><h4 style="color:var(--green)">Прибыль: +80–120К/мес</h4><p>При сохранении рентабельности 15.5%</p></div></div>
+      <div class="pi"><div class="pn">03</div><div><h4 style="color:var(--blue)">Горизонт: 2–4 недели</h4><p>Первые результаты после пополнения складов</p></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ══════════════════════════════════════════
+// DATA STORE
+// ══════════════════════════════════════════
+const DATA = {
+  feb: {
+    label: 'Февраль 2026',
+    note: 'Данные за февраль 2026 (28 дней)',
+    revenue: 2975365,
+    cogs: 1042926,
+    commission: 841646,
+    logistics: 267528,
+    storage: 15363,
+    withheld: 227062,
+    returns: 62814,
+    fines: 10,
+    tax: 40008,
+    profit: 479497,
+    margin: 0.161,
+    units: 1231,
+    transfer: 1562431,
+    adSpend: 231916,
+    adOrders: 1266,
+    adCpo: 183,
+    adDrr: 7.0,
+    v8adLoss: -16401,
+    funnel: { views:114345, basket:9849, orders:2661, bought:2202, cancelled:423 },
+    weekly: {
+      labels:['нед 1\n01.02','нед 2\n09.02','нед 3\n16.02','нед 4\n23.02'],
+      revenue:[698520,714879,856276,664807],
+      profit:[111870,112946,144748,96066]
+    },
+    products: [
+      {art:'WD-015',    orders:161, buyout:86, price:3585, gp:152000, cpo:50,  drr:1.4,  stock:82,  days:17, rat:4.7, status:'A'},
+      {art:'2110-70W',  orders:191, buyout:82, price:1824, gp:54000,  cpo:118, drr:6.5,  stock:17,  days:3,  rat:4.7, status:'A'},
+      {art:'H-005',     orders:155, buyout:90, price:1603, gp:38000,  cpo:109, drr:6.8,  stock:29,  days:6,  rat:4.7, status:'A'},
+      {art:'G0056-2шт', orders:125, buyout:92, price:2631, gp:61000,  cpo:151, drr:5.7,  stock:134, days:40, rat:4.7, status:'A'},
+      {art:'G0249-70W', orders:94,  buyout:90, price:1979, gp:29000,  cpo:null,drr:null, stock:27,  days:10, rat:4.5, status:'B'},
+      {art:'WD-028',    orders:82,  buyout:86, price:3505, gp:46000,  cpo:227, drr:6.5,  stock:62,  days:27, rat:4.7, status:'A'},
+      {art:'2190-70W',  orders:91,  buyout:82, price:1700, gp:22000,  cpo:111, drr:6.5,  stock:68,  days:27, rat:4.7, status:'B'},
+      {art:'2170-70W',  orders:84,  buyout:83, price:1774, gp:25000,  cpo:76,  drr:4.3,  stock:33,  days:14, rat:4.6, status:'B'},
+      {art:'WD-2110',   orders:62,  buyout:87, price:3785, gp:33000,  cpo:393, drr:10.4, stock:24,  days:12, rat:4.5, status:'B'},
+      {art:'WD-021',    orders:42,  buyout:83, price:3514, gp:20000,  cpo:355, drr:10.1, stock:57,  days:51, rat:4.6, status:'B'},
+      {art:'WD-024',    orders:48,  buyout:81, price:3850, gp:28000,  cpo:750, drr:19.5, stock:103, days:76, rat:4.7, status:'B'},
+      {art:'V8H7',      orders:22,  buyout:80, price:2882, gp:14000,  cpo:1314,drr:45.6, stock:74,  days:122,rat:4.6, status:'СТОП'},
+      {art:'WD-067',    orders:57,  buyout:75, price:3950, gp:32000,  cpo:69,  drr:1.8,  stock:27,  days:18, rat:4.6, status:'B'},
+      {art:'G0238-70W', orders:69,  buyout:85, price:1981, gp:16000,  cpo:219, drr:11.1, stock:43,  days:24, rat:4.4, status:'B'},
+      {art:'WD-012',    orders:36,  buyout:82, price:3577, gp:20000,  cpo:57,  drr:1.6,  stock:31,  days:27, rat:4.9, status:'B'},
+    ],
+    ads: [
+      {art:'WD-015',    spend:8050,  orders:161, price:3585},
+      {art:'WD-067',    spend:3944,  orders:57,  price:3950},
+      {art:'WD-012',    spend:2062,  orders:36,  price:3577},
+      {art:'2190-70W',  spend:10126, orders:91,  price:1700},
+      {art:'778-70W',   spend:4184,  orders:41,  price:1937},
+      {art:'2170-70W',  spend:6371,  orders:84,  price:1774},
+      {art:'G0056-2шт', spend:18874, orders:125, price:2631},
+      {art:'H-005',     spend:16868, orders:155, price:1603},
+      {art:'2110-70W',  spend:22570, orders:191, price:1824},
+      {art:'WD-028',    spend:18601, orders:82,  price:3505},
+      {art:'G0238-70W', spend:15129, orders:69,  price:1981},
+      {art:'WD-021',    spend:14924, orders:42,  price:3514},
+      {art:'WD-2110',   spend:24365, orders:62,  price:3785},
+      {art:'WD-024',    spend:35985, orders:48,  price:3850},
+      {art:'V8H7',      spend:28909, orders:22,  price:2882},
+    ]
+  },
+
+  mar: {
+    label: 'Март 2026 (1–18)',
+    note: 'Данные за март 2026 (18 дней)',
+    revenue: 1278089,
+    cogs: 447606,
+    commission: 370248,
+    logistics: 109516,
+    storage: 14711,
+    withheld: 120856,
+    returns: 17421,
+    fines: 30,
+    tax: 17169,
+    profit: 180532,
+    margin: 0.141,
+    units: 518,
+    transfer: 645307,
+    adSpend: 88653,
+    adOrders: 404,
+    adCpo: 219,
+    adDrr: 2.4,
+    v8adLoss: -987,
+    funnel: { views:35000, basket:3000, orders:842, bought:720, cancelled:110 },
+    weekly: {
+      labels:['нед 10\n02.03','нед 11\n09.03'],
+      revenue:[676512,529009],
+      profit:[130941,86292]
+    },
+    products: [
+      {art:'WD-015',    orders:58,  buyout:86, price:3585, gp:100022, cpo:93,  drr:0.8,  stock:82,  days:17, rat:4.7, status:'A'},
+      {art:'2110-70W',  orders:58,  buyout:82, price:1824, gp:16360,  cpo:270, drr:4.4,  stock:17,  days:3,  rat:4.7, status:'A'},
+      {art:'H-005',     orders:64,  buyout:90, price:1603, gp:15841,  cpo:170, drr:3.7,  stock:29,  days:6,  rat:4.7, status:'A'},
+      {art:'G0056-2шт', orders:28,  buyout:92, price:2631, gp:11446,  cpo:52,  drr:0.4,  stock:134, days:40, rat:4.7, status:'A'},
+      {art:'G0249-70W', orders:31,  buyout:90, price:1979, gp:9497,   cpo:null,drr:null, stock:27,  days:10, rat:4.5, status:'B'},
+      {art:'WD-028',    orders:23,  buyout:86, price:3505, gp:12495,  cpo:605, drr:4.7,  stock:62,  days:27, rat:4.7, status:'A'},
+      {art:'2190-70W',  orders:24,  buyout:82, price:1700, gp:4994,   cpo:51,  drr:0.6,  stock:68,  days:27, rat:4.7, status:'B'},
+      {art:'2170-70W',  orders:26,  buyout:83, price:1774, gp:7145,   cpo:166, drr:2.7,  stock:33,  days:14, rat:4.6, status:'B'},
+      {art:'WD-2110',   orders:34,  buyout:87, price:3785, gp:18236,  cpo:577, drr:7.4,  stock:24,  days:12, rat:4.5, status:'B'},
+      {art:'WD-021',    orders:9,   buyout:83, price:3514, gp:4885,   cpo:394, drr:2.0,  stock:57,  days:51, rat:4.6, status:'B'},
+      {art:'WD-024',    orders:14,  buyout:81, price:3850, gp:8349,   cpo:318, drr:2.3,  stock:103, days:76, rat:4.7, status:'B'},
+      {art:'V8H7',      orders:6,   buyout:80, price:2882, gp:2678,   cpo:165, drr:1.5,  stock:74,  days:122,rat:4.6, status:'B'},
+      {art:'WD-067',    orders:13,  buyout:75, price:3950, gp:8001,   cpo:143, drr:0.9,  stock:27,  days:18, rat:4.6, status:'B'},
+      {art:'G0238-70W', orders:14,  buyout:85, price:1981, gp:4298,   cpo:62,  drr:0.8,  stock:43,  days:24, rat:4.4, status:'B'},
+      {art:'WD-012',    orders:16,  buyout:82, price:3577, gp:8818,   cpo:118, drr:1.2,  stock:31,  days:27, rat:4.9, status:'B'},
+    ],
+    ads: [
+      {art:'WD-015',    spend:5380,  orders:58,  price:3585},
+      {art:'WD-067',    spend:1856,  orders:13,  price:3950},
+      {art:'WD-012',    spend:1888,  orders:16,  price:3577},
+      {art:'2190-70W',  spend:1224,  orders:24,  price:1700},
+      {art:'778-70W',   spend:1504,  orders:16,  price:1937},
+      {art:'2170-70W',  spend:4318,  orders:26,  price:1774},
+      {art:'G0056-2шт', spend:1449,  orders:28,  price:2631},
+      {art:'H-005',     spend:10911, orders:64,  price:1603},
+      {art:'2110-70W',  spend:15636, orders:58,  price:1824},
+      {art:'WD-028',    spend:13922, orders:23,  price:3505},
+      {art:'G0238-70W', spend:862,   orders:14,  price:1981},
+      {art:'WD-021',    spend:3542,  orders:9,   price:3514},
+      {art:'WD-2110',   spend:19632, orders:34,  price:3785},
+      {art:'WD-024',    spend:4450,  orders:14,  price:3850},
+      {art:'V8H7',      spend:987,   orders:6,   price:2882},
+    ]
+  }
+};
+
+// Combined feb+mar
+DATA.all = {
+  label: 'Февраль + Март 2026',
+  note: 'Показаны данные за оба месяца',
+  revenue:   DATA.feb.revenue + DATA.mar.revenue,
+  cogs:      DATA.feb.cogs + DATA.mar.cogs,
+  commission:DATA.feb.commission + DATA.mar.commission,
+  logistics: DATA.feb.logistics + DATA.mar.logistics,
+  storage:   DATA.feb.storage + DATA.mar.storage,
+  withheld:  DATA.feb.withheld + DATA.mar.withheld,
+  returns:   DATA.feb.returns + DATA.mar.returns,
+  fines:     DATA.feb.fines + DATA.mar.fines,
+  tax:       DATA.feb.tax + DATA.mar.tax,
+  profit:    DATA.feb.profit + DATA.mar.profit,
+  margin:    0.155,
+  units:     DATA.feb.units + DATA.mar.units,
+  transfer:  DATA.feb.transfer + DATA.mar.transfer,
+  adSpend:   DATA.feb.adSpend + DATA.mar.adSpend,
+  adOrders:  DATA.feb.adOrders + DATA.mar.adOrders,
+  adCpo:     191,
+  adDrr:     4.6,
+  v8adLoss:  DATA.feb.v8adLoss + DATA.mar.v8adLoss,
+  funnel: {
+    views:   DATA.feb.funnel.views   + DATA.mar.funnel.views,
+    basket:  DATA.feb.funnel.basket  + DATA.mar.funnel.basket,
+    orders:  DATA.feb.funnel.orders  + DATA.mar.funnel.orders,
+    bought:  DATA.feb.funnel.bought  + DATA.mar.funnel.bought,
+    cancelled:DATA.feb.funnel.cancelled + DATA.mar.funnel.cancelled,
+  },
+  weekly: {
+    labels: ['нед5\n01.02','нед6\n09.02','нед7\n16.02','нед8\n23.02','нед10\n02.03','нед11\n09.03'],
+    revenue: [698520,714879,856276,664807,676512,529009],
+    profit:  [111870,112946,144748,96066,130941,86292]
+  },
+  products: DATA.feb.products.map((p,i) => {
+    const m = DATA.mar.products[i];
+    return {
+      art: p.art,
+      orders: p.orders + m.orders,
+      buyout: p.buyout,
+      price:  p.price,
+      gp:     p.gp + m.gp,
+      cpo:    (p.cpo && m.cpo) ? Math.round((p.spend||0 + m.spend||0) / (p.orders+m.orders)) : p.cpo,
+      drr:    p.drr,
+      stock:  p.stock,
+      days:   p.days,
+      rat:    p.rat,
+      status: p.status
+    };
+  }),
+  ads: DATA.feb.ads.map((a,i) => {
+    const m = DATA.mar.ads[i];
+    return { art: a.art, spend: a.spend + m.spend, orders: a.orders + m.orders, price: a.price };
+  })
+};
+
+// fix all CPO
+DATA.all.products.forEach((p,i) => {
+  const fa = DATA.feb.ads.find(a=>a.art===p.art);
+  const ma = DATA.mar.ads.find(a=>a.art===p.art);
+  if (fa && ma) p.cpo = Math.round((fa.spend + ma.spend) / p.orders);
+});
+DATA.all.ads.forEach(a => { a.cpo = Math.round(a.spend/a.orders); a.drr = +(a.spend/(a.orders*a.price)*100).toFixed(1); });
+DATA.feb.ads.forEach(a => { a.cpo = Math.round(a.spend/a.orders); a.drr = +(a.spend/(a.orders*a.price)*100).toFixed(1); });
+DATA.mar.ads.forEach(a => { a.cpo = Math.round(a.spend/a.orders); a.drr = +(a.spend/(a.orders*a.price)*100).toFixed(1); });
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentMonth = 'all';
+let charts = {};
+
+function fmt(n) { return n >= 1e6 ? (n/1e6).toFixed(2)+'М ₽' : n >= 1e3 ? Math.round(n/1e3)+'К ₽' : n+'₽'; }
+function fmtN(n) { return n.toLocaleString('ru') + ' ₽'; }
+function pct(v) { return (v*100).toFixed(1)+'%'; }
+function cpoStatus(cpo) {
+  if (!cpo || cpo===0) return '<span class="badge bk">—</span>';
+  if (cpo < 150) return `<span class="badge bg">ТОП</span>`;
+  if (cpo < 350) return `<span class="badge bb">ХОРОШО</span>`;
+  if (cpo < 650) return `<span class="badge by">ВНИМАНИЕ</span>`;
+  return `<span class="badge br">СТОП</span>`;
+}
+function drrColor(drr) {
+  if (!drr) return '';
+  return drr < 10 ? 'pos' : drr < 20 ? 'wrn' : 'neg';
+}
+
+// ══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ══════════════════════════════════════════
+
+function renderHeader(d) {
+  document.getElementById('hdr-period').textContent = `Аналитика магазина · ${d.label}`;
+  document.getElementById('h-revenue').textContent = fmt(d.revenue);
+  document.getElementById('h-profit').textContent = fmt(d.profit);
+  document.getElementById('h-margin').textContent = (d.margin*100).toFixed(1)+'%';
+  document.getElementById('h-ads').textContent = fmt(d.adSpend);
+  document.getElementById('h-drr').textContent = d.adDrr+'%';
+}
+
+function renderOverview(d) {
+  document.getElementById('ov-revenue').textContent = fmt(d.revenue);
+  document.getElementById('ov-revenue-d').textContent = d === DATA.all ? '▼ −1 317 405 ₽ к пред.' : '';
+  document.getElementById('ov-revenue-d').className = 'delta dd';
+  document.getElementById('ov-profit').textContent = fmt(d.profit);
+  document.getElementById('ov-margin-d').textContent = `рент. ${(d.margin*100).toFixed(1)}%`;
+  document.getElementById('ov-margin-d').className = 'delta dw';
+  document.getElementById('ov-units').textContent = d.units + ' шт';
+  document.getElementById('ov-units-d').textContent = d === DATA.all ? '▼ с 2 661 пред.' : '';
+  document.getElementById('ov-units-d').className = 'delta dd';
+  document.getElementById('ov-transfer').textContent = fmt(d.transfer);
+  document.getElementById('ov-ads').textContent = fmt(d.adSpend);
+  document.getElementById('ov-drr').textContent = d.adDrr + '%';
+  document.getElementById('ov-cpo').textContent = d.adCpo + ' ₽';
+
+  // cost rows
+  const cr = document.getElementById('cost-rows');
+  cr.innerHTML = '';
+  const costs = [
+    {n:'Себестоимость', v:d.cogs/d.revenue, c:'var(--blue)'},
+    {n:'Комиссии WB',   v:d.commission/d.revenue, c:'var(--red)'},
+    {n:'Удержания',     v:d.withheld/d.revenue, c:'var(--yellow)'},
+    {n:'Логистика',     v:d.logistics/d.revenue, c:'var(--muted2)'},
+    {n:'Реклама',       v:d.adSpend/d.revenue, c:'var(--blue)'},
+    {n:'Возвраты',      v:d.returns/d.revenue, c:'var(--green)'},
+    {n:'Хранение',      v:d.storage/d.revenue, c:'var(--muted)'},
+  ];
+  costs.forEach(c => {
+    const p = (c.v*100).toFixed(1);
+    cr.innerHTML += `<div class="crow"><span class="cn">${c.n}</span><div class="cb"><div style="height:5px;border-radius:3px;background:${c.c};width:${p}%;"></div></div><span class="cv" style="color:${c.c}">${p}%</span></div>`;
+  });
+  cr.innerHTML += `<div style="height:1px;background:var(--border);margin:8px 0"></div>
+  <div class="crow"><span class="cn" style="font-weight:700;color:var(--green)">Вал. прибыль</span><div class="cb"><div style="height:5px;border-radius:3px;background:var(--green);width:${(d.margin*100).toFixed(1)}%;"></div></div><span class="cv" style="color:var(--green);font-weight:700">${(d.margin*100).toFixed(1)}%</span></div>`;
+
+  // alerts
+  const ag = document.getElementById('alerts-grid');
+  ag.innerHTML = `
+    <div class="ac ac-r"><h4 style="color:var(--red)">🔴 2110-70W — 3 дня до нуля</h4><p>17 шт на складе, 5.4/день. Топ-1 продаж, CPO 153₽. Везти 120 шт сегодня.</p></div>
+    <div class="ac ac-r"><h4 style="color:var(--red)">🔴 H-005 — 6 дней до нуля</h4><p>29 шт, 4.8/день. CPO 127₽. Везти 100 шт немедленно.</p></div>
+    <div class="ac ac-y"><h4 style="color:var(--yellow)">🟠 V8H7 — убыточная реклама</h4><p>CPO 1 068₽, ДРР 23%. Потрачено 29 896₽. Остановить немедленно.</p></div>
+    <div class="ac ac-y"><h4 style="color:var(--yellow)">🟠 WD-015(PRO) — 8 дней</h4><p>36 шт, расход 4.8/день. Везти 100 шт на этой неделе.</p></div>
+    <div class="ac ac-g"><h4 style="color:var(--green)">🟢 WD-015 — масштабировать ×3</h4><p>CPO 61₽, ДРР 1.1%. После пополнения склада увеличить бюджет.</p></div>
+    <div class="ac ac-b"><h4 style="color:var(--blue)">📉 Падение продаж −20%</h4><p>Причина: пустые склады. После пополнения продажи восстановятся.</p></div>`;
+
+  // weekly chart
+  renderWeeklyChart(d);
+}
+
+function renderFinance(d) {
+  document.getElementById('fi-revenue').textContent = fmtN(d.revenue);
+  document.getElementById('fi-cogs').textContent = '−'+fmtN(d.cogs);
+  document.getElementById('fi-comm').textContent = '−'+fmtN(d.commission);
+  document.getElementById('fi-profit').textContent = fmtN(d.profit);
+
+  // PnL table
+  const t = document.getElementById('pnl-table');
+  const rows = [
+    ['Выручка', d.revenue, true],
+    ['Возвраты', -d.returns, false],
+    ['Комиссии WB', -d.commission, false],
+    ['Логистика', -d.logistics, false],
+    ['Хранение', -d.storage, false],
+    ['Удержания', -d.withheld, false],
+    ['К переводу на р/с', d.transfer, true],
+    ['Себестоимость', -d.cogs, false],
+    ['Налог 5%', -d.tax, false],
+    ['Валовая прибыль', d.profit, true],
+    ['Рентабельность', null, true],
+  ];
+  t.innerHTML = '<thead><tr><th>Статья</th><th>Сумма</th></tr></thead><tbody>' +
+    rows.map(r => {
+      if (r[0] === 'Рентабельность') return `<tr><td style="color:var(--muted2)">${r[0]}</td><td style="color:var(--blue);font-weight:600">${(d.margin*100).toFixed(1)}%</td></tr>`;
+      const v = r[1];
+      const cls = v >= 0 ? 'pos' : 'neg';
+      const bold = r[2] ? 'font-weight:600;' : '';
+      const color = r[0]==='Валовая прибыль' ? 'color:var(--green);' : '';
+      return `<tr><td style="${bold}${color}">${r[0]}</td><td class="${cls}" style="${bold}">${v>=0?'':''} ${Math.abs(v).toLocaleString('ru')} ₽</td></tr>`;
+    }).join('') + '</tbody>';
+
+  // top products
+  const tp = document.getElementById('top-products-table');
+  const sorted = [...d.products].sort((a,b)=>b.gp-a.gp);
+  const abcMap = {A:'<span class="badge bg">A</span>',B:'<span class="badge bb">B</span>','СТОП':'<span class="badge br">СТОП</span>'};
+  tp.innerHTML = `<thead><tr><th>Артикул</th><th>Вал.прибыль</th><th>Заказов</th><th>Прибыль/шт</th><th>Ср.цена</th><th>ABC</th></tr></thead><tbody>` +
+    sorted.map(p => `<tr>
+      <td class="art">${p.art}</td>
+      <td class="${p.gp>=0?'pos':'neg'}">${p.gp.toLocaleString('ru')} ₽</td>
+      <td>${p.orders}</td>
+      <td>${Math.round(p.gp/p.orders).toLocaleString('ru')} ₽</td>
+      <td>${p.price.toLocaleString('ru')} ₽</td>
+      <td>${abcMap[p.status]||''}</td>
+    </tr>`).join('') + '</tbody>';
+
+  renderProfitChart(d);
+}
+
+function renderFunnel(d) {
+  const f = d.funnel;
+  const convBasket = (f.basket/f.views*100).toFixed(1);
+  const convOrder  = (f.orders/f.basket*100).toFixed(1);
+  const buyout     = (f.bought/f.orders*100).toFixed(1);
+  const cancel     = (f.cancelled/f.orders*100).toFixed(1);
+
+  document.getElementById('funnel-steps').innerHTML = `
+    <div class="fstep"><div class="fv" style="color:var(--blue)">${(f.views/1000).toFixed(0)}К</div><div class="fl">Переходы</div><div class="fc">CTR: ${convBasket}%</div><span class="farr">›</span></div>
+    <div class="fstep"><div class="fv">${(f.basket/1000).toFixed(1)}К</div><div class="fl">В корзину</div><div class="fc">→заказ: ${convOrder}%</div><span class="farr">›</span></div>
+    <div class="fstep"><div class="fv" style="color:var(--yellow)">${f.orders.toLocaleString('ru')}</div><div class="fl">Заказали</div><div class="fc">выкуп: ${buyout}%</div><span class="farr">›</span></div>
+    <div class="fstep"><div class="fv" style="color:var(--green)">${f.bought.toLocaleString('ru')}</div><div class="fl">Выкупили</div><div class="fc">−${cancel}% отмен</div><span class="farr">›</span></div>
+    <div class="fstep"><div class="fv" style="color:var(--red)">${f.cancelled}</div><div class="fl">Отменили</div><div class="fc">${cancel}% от заказов</div></div>`;
+
+  // funnel table
+  const ft = document.getElementById('funnel-table');
+  ft.innerHTML = `<thead><tr><th>Артикул</th><th>Заказов</th><th>Выкуп%</th><th>Ср.цена</th><th>Динамика</th><th>Рейтинг</th></tr></thead><tbody>` +
+    d.products.map(p => `<tr>
+      <td class="art">${p.art}</td>
+      <td>${p.orders}</td>
+      <td class="${p.buyout>=85?'pos':p.buyout>=75?'':''}">${p.buyout}%</td>
+      <td>${p.price.toLocaleString('ru')} ₽</td>
+      <td>—</td>
+      <td>${p.rat}⭐</td>
+    </tr>`).join('') + '</tbody>';
+
+  renderFunnelChart(d);
+}
+
+function renderAds(d) {
+  document.getElementById('ad-spend').textContent = fmt(d.adSpend);
+  document.getElementById('ad-drr').textContent = d.adDrr + '%';
+  document.getElementById('ad-cpo').textContent = d.adCpo + ' ₽';
+  document.getElementById('ad-orders').textContent = d.adOrders + ' шт';
+  document.getElementById('ad-v8').textContent = Math.round(Math.abs(d.v8adLoss)).toLocaleString('ru') + ' ₽ слито';
+
+  const at = document.getElementById('ads-table');
+  const sorted = [...d.ads].sort((a,b) => a.cpo - b.cpo);
+  at.innerHTML = `<thead><tr><th>Артикул</th><th>Расход</th><th>Заказов</th><th>CPO</th><th>ДРР%</th><th>Статус</th></tr></thead><tbody>` +
+    sorted.map(a => `<tr>
+      <td class="art">${a.art}</td>
+      <td>${a.spend.toLocaleString('ru')} ₽</td>
+      <td>${a.orders}</td>
+      <td class="${a.cpo<150?'pos':a.cpo<450?'':a.cpo<700?'wrn':'neg'}">${a.cpo.toLocaleString('ru')} ₽</td>
+      <td class="${drrColor(a.drr)}">${a.drr}%</td>
+      <td>${cpoStatus(a.cpo)}</td>
+    </tr>`).join('') + '</tbody>';
+
+  renderCpoChart(d);
+}
+
+function renderProducts(d) {
+  const pt = document.getElementById('products-table');
+  const abcMap = {A:'<span class="badge bg">A</span>',B:'<span class="badge bb">B</span>','СТОП':'<span class="badge br">СТОП</span>'};
+  pt.innerHTML = `<thead><tr><th>Артикул</th><th>Заказов</th><th>Выкуп%</th><th>Ср.цена</th><th>Вал.прибыль</th><th>CPO рекл</th><th>ДРР%</th><th>Склад</th><th>Дней</th><th>Рейтинг</th><th>Итог</th></tr></thead><tbody>` +
+    d.products.map(p => {
+      const adData = d.ads.find(a=>a.art===p.art);
+      const cpo = adData ? adData.cpo : p.cpo;
+      const drr = adData ? adData.drr : p.drr;
+      return `<tr>
+        <td class="art">${p.art}</td>
+        <td>${p.orders}</td>
+        <td class="${p.buyout>=85?'pos':''}">${p.buyout}%</td>
+        <td>${p.price.toLocaleString('ru')} ₽</td>
+        <td class="${p.gp>=0?'pos':'neg'}">${p.gp.toLocaleString('ru')} ₽</td>
+        <td class="${cpo&&cpo<200?'pos':cpo&&cpo>600?'neg':'wrn'}">${cpo ? cpo+'₽' : '—'}</td>
+        <td class="${drrColor(drr)}">${drr ? drr+'%' : '—'}</td>
+        <td class="${p.days<=7?'neg':p.days<=14?'wrn':''}">${p.stock}</td>
+        <td class="${p.days<=7?'neg':p.days<=14?'wrn':p.days>=30?'pos':''}">${p.days}д</td>
+        <td>${p.rat}⭐</td>
+        <td>${abcMap[p.status]||''}</td>
+      </tr>`;
+    }).join('') + '</tbody>';
+}
+
+function renderPlanTable() {
+  const pt = document.getElementById('plan-table');
+  const rows = [
+    {art:'2110-70W', p:'P1', stock:'17 → +120', ads:'держать, CPO 153₽', price:'1 824₽', action:'Срочная поставка сегодня', pr:'br'},
+    {art:'H-005',    p:'P1', stock:'29 → +100', ads:'держать, CPO 127₽', price:'1 603₽', action:'Срочная поставка сегодня', pr:'br'},
+    {art:'WD-015',   p:'P1+',stock:'82 → +40',  ads:'увеличить ×3',       price:'3 585₽', action:'Масштабировать рекламу после поставки', pr:'bg'},
+    {art:'WD-015(PRO)',p:'P2',stock:'36 → +100',ads:'держать',             price:'—',      action:'Поставка на этой неделе', pr:'br'},
+    {art:'WD-067',   p:'P2+',stock:'27 → +13',  ads:'увеличить ×5',       price:'3 950₽', action:'Увеличить бюджет рекламы', pr:'bg'},
+    {art:'WD-012',   p:'P2+',stock:'31 шт',     ads:'увеличить ×5',       price:'3 577₽', action:'Увеличить бюджет рекламы', pr:'bg'},
+    {art:'G0249-70W',p:'P2', stock:'27 → +37',  ads:'запустить рекламу',  price:'1 979₽', action:'Поставка + запуск рекламы', pr:'by'},
+    {art:'WD-2110',  p:'P2', stock:'24 → +30',  ads:'снизить ставки',     price:'3 785₽', action:'Поставка + оптимизация ставок', pr:'by'},
+    {art:'2170-70W', p:'P2', stock:'33 → +27',  ads:'CPO 97₽ — отлично', price:'1 774₽', action:'Срочная поставка, масштабировать', pr:'by'},
+    {art:'WD-024',   p:'P3', stock:'103 шт',    ads:'снизить ставки −20%',price:'3 850₽', action:'Улучшить карточку', pr:'by'},
+    {art:'WD-028',   p:'P2', stock:'62 → +30',  ads:'держать',            price:'3 505₽', action:'Плановая поставка', pr:'bb'},
+    {art:'2190-70W', p:'P2', stock:'68 → +30',  ads:'CPO 99₽ — хорошо',  price:'1 700₽', action:'Плановая поставка + рост бюджета', pr:'bb'},
+    {art:'G0056-2шт',p:'P2', stock:'134 шт',    ads:'CPO 133₽ — хорошо', price:'2 631₽', action:'Изучить причину падения −44%', pr:'bb'},
+    {art:'V8H7',     p:'СТОП',stock:'74 шт',    ads:'ОСТАНОВИТЬ',         price:'2 882₽', action:'Остановить рекламу, продавать органически', pr:'br'},
+    {art:'G0238',    p:'УБЫТ',stock:'0 шт',     ads:'убрать из рекламы',  price:'↑ до 2000₽', action:'Проверить себестоимость, поднять цену', pr:'br'},
+  ];
+  pt.innerHTML = `<thead><tr><th>Артикул</th><th>Приоритет</th><th>Склад→Везти</th><th>Реклама</th><th>Цена</th><th>Действие</th></tr></thead><tbody>` +
+    rows.map(r => `<tr>
+      <td class="art">${r.art}</td>
+      <td><span class="badge ${r.pr}">${r.p}</span></td>
+      <td>${r.stock}</td>
+      <td>${r.ads}</td>
+      <td>${r.price}</td>
+      <td style="font-size:11px;color:var(--muted2)">${r.action}</td>
+    </tr>`).join('') + '</tbody>';
+}
+
+function renderStockBars() {
+  if (document.getElementById('stockBars').innerHTML) return;
+  const data = [
+    {art:'2110-40W',days:0,total:4},{art:'2110-70W',days:3,total:43},{art:'H-005',days:6,total:42},
+    {art:'G0237',days:7,total:12},{art:'WD-015(PRO)',days:8,total:41},{art:'WD-028(PRO)',days:10,total:22},
+    {art:'G0249-70W',days:10,total:45},{art:'WD-2110',days:12,total:35},{art:'2170-70W',days:14,total:45},
+    {art:'G0056-1шт',days:17,total:43},{art:'WD-015',days:17,total:102},{art:'WD-067',days:18,total:33},
+    {art:'WD-021(PRO)',days:18,total:20},{art:'G0249-50W',days:24,total:22},{art:'G0238-70W',days:24,total:61},
+    {art:'WD-012',days:27,total:35},{art:'WD-028',days:27,total:69},{art:'2190-70W',days:27,total:81},
+    {art:'G0056-2шт',days:40,total:144},{art:'778-70W',days:40,total:58},
+    {art:'WD-021',days:51,total:61},{art:'WD-024',days:76,total:106},{art:'V8H7',days:122,total:76},
+  ];
+  const w = document.getElementById('stockBars');
+  data.forEach(d => {
+    const pct = Math.min(d.days/60*100,100);
+    const c = d.days<=7?'#dc2626':d.days<=14?'#d97706':d.days<=30?'#2563eb':'#16a34a';
+    const bg = d.days<=7?'rgba(220,38,38,.05)':d.days<=14?'rgba(217,119,6,.04)':'transparent';
+    w.innerHTML += `<div style="display:flex;align-items:center;gap:12px;padding:5px 8px;border-radius:6px;background:${bg};margin-bottom:2px;border-bottom:1px solid rgba(0,0,0,.05)">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted2);min-width:110px">${d.art}</span>
+      <div style="flex:1;height:10px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${c};border-radius:4px;opacity:.75"></div>
+      </div>
+      <span style="font-family:var(--mono);font-size:11px;color:${c};min-width:75px;text-align:right;font-weight:500">${d.days} дн | ${d.total} шт</span>
+    </div>`;
+  });
+}
+
+// ══════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════
+Chart.defaults.color = '#8b8fa8';
+Chart.defaults.borderColor = 'rgba(0,0,0,.07)';
+Chart.defaults.font.family = "'DM Mono',monospace";
+Chart.defaults.font.size = 10;
+
+function destroyChart(key) {
+  if (charts[key]) { charts[key].destroy(); delete charts[key]; }
+}
+
+function renderWeeklyChart(d) {
+  destroyChart('weekly');
+  charts.weekly = new Chart(document.getElementById('weeklyChart'), {
+    type:'bar',
+    data:{
+      labels: d.weekly.labels,
+      datasets:[
+        {label:'Выручка', data:d.weekly.revenue, backgroundColor:'rgba(37,99,235,.18)', borderColor:'#2563eb', borderWidth:1.5, borderRadius:4, yAxisID:'y'},
+        {label:'Прибыль', data:d.weekly.profit, type:'line', borderColor:'#16a34a', backgroundColor:'rgba(22,163,74,.08)', borderWidth:2, pointRadius:4, pointBackgroundColor:'#16a34a', tension:.4, yAxisID:'y'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'К'},grid:{color:'rgba(0,0,0,.05)'}},x:{ticks:{maxRotation:0,font:{size:9}},grid:{display:false}}}}
+  });
+}
+
+function renderProfitChart(d) {
+  destroyChart('profit');
+  charts.profit = new Chart(document.getElementById('profitChart'), {
+    type:'bar',
+    data:{labels:d.weekly.labels,datasets:[{data:d.weekly.profit,backgroundColor:d.weekly.profit.map(v=>v<0?'rgba(220,38,38,.55)':'rgba(22,163,74,.55)'),borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'К'},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}
+  });
+}
+
+function renderFunnelChart(d) {
+  destroyChart('funnel');
+  const f = d.funnel;
+  charts.funnel = new Chart(document.getElementById('funnelChart'), {
+    type:'bar',
+    data:{
+      labels:['Переходы','В корзину','Заказали','Выкупили'],
+      datasets:[{data:[f.views,f.basket,f.orders,f.bought],backgroundColor:['rgba(37,99,235,.6)','rgba(37,99,235,.45)','rgba(217,119,6,.55)','rgba(22,163,74,.55)'],borderRadius:5}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>v>=1000?(v/1000).toFixed(0)+'К':v},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+  });
+}
+
+function renderCpoChart(d) {
+  destroyChart('cpo');
+  const sorted = [...d.ads].sort((a,b)=>a.cpo-b.cpo);
+  const arts = sorted.map(a=>a.art);
+  const cpos = sorted.map(a=>a.cpo);
+  const colors = cpos.map(v=>v<150?'rgba(22,163,74,.6)':v<400?'rgba(37,99,235,.55)':v<700?'rgba(217,119,6,.65)':'rgba(220,38,38,.65)');
+  charts.cpo = new Chart(document.getElementById('cpoChart'), {
+    type:'bar',
+    data:{labels:arts,datasets:[{data:cpos,backgroundColor:colors,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`CPO: ${c.raw} ₽`}}},
+      scales:{x:{ticks:{maxRotation:35,font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'₽'},grid:{color:'rgba(0,0,0,.05)'}}}}
+  });
+}
+
+// ══════════════════════════════════════════
+// TAB & MONTH CONTROL
+// ══════════════════════════════════════════
+let currentTab = 'overview';
+
+function showTab(id, btn) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+  currentTab = id;
+  renderTab(id, DATA[currentMonth]);
+}
+
+function setMonth(m, btn) {
+  currentMonth = m;
+  document.querySelectorAll('.mf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = DATA[m];
+  document.getElementById('mf-note').textContent = d.note;
+  renderAll(d);
+}
+
+function renderTab(tab, d) {
+  if (tab==='overview') renderOverview(d);
+  else if (tab==='finance') renderFinance(d);
+  else if (tab==='funnel') renderFunnel(d);
+  else if (tab==='ads') renderAds(d);
+  else if (tab==='stock') renderStockBars();
+  else if (tab==='products') renderProducts(d);
+  else if (tab==='plan') renderPlanTable();
+}
+
+function renderAll(d) {
+  renderHeader(d);
+  renderTab(currentTab, d);
+}
+
+// INIT
+renderAll(DATA.all);
+</script>
+</body>
+</html>
