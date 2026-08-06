@@ -53,7 +53,7 @@
   const selectSystemNode = btn => {
     const c = systemContent[btn.dataset.systemNode];
     if (!c || !detail) return;
-    systemNodes.forEach(x => x.classList.toggle('is-active', x === btn));
+    systemNodes.forEach(x => { x.classList.toggle('is-active', x === btn); x.style.removeProperty('--ap-progress'); });
     detail.classList.add('is-changing');
     setTimeout(() => {
       detail.innerHTML = `<span class="detail-index">${c.i}</span><h3>${c.t}</h3><p>${c.p}</p><ul>${c.l.map(x => `<li>${x}</li>`).join('')}</ul><a class="text-link" href="${c.href}">${c.a}<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`;
@@ -62,21 +62,32 @@
   };
   systemNodes.forEach(btn => btn.addEventListener('click', () => { stopSystemAutoplay(); selectSystemNode(btn); }));
 
-  // Автопилот блока «Система»: узлы переключаются сами, пока посетитель не вмешался
+  // Автопилот блока «Система»: луч радара ведёт по кругу, узел активируется в момент прохода луча.
+  // Узлы стоят в кардинальных точках (0/90/180/270°), порядок в DOM совпадает с ходом луча по часовой.
   const systemMap = $('.system-map');
-  const AP_INTERVAL = 5000;
-  let apTimer = null, apStopped = false;
+  const sweepEl = $('.radar-sweep');
+  const SWEEP_PERIOD = 20000; // полный оборот луча; смена узла — каждые SWEEP_PERIOD/4
+  let apRaf = 0, apLast = 0, apAngle = 0, apStopped = false;
   const apReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const startSystemAutoplay = () => {
-    if (apStopped || apReduced || apTimer || !systemMap || !systemNodes.length) return;
-    systemMap.classList.add('is-autoplay');
-    apTimer = setInterval(() => {
-      const i = systemNodes.findIndex(x => x.classList.contains('is-active'));
-      selectSystemNode(systemNodes[(i + 1) % systemNodes.length]);
-    }, AP_INTERVAL);
+  if (sweepEl && !apReduced) sweepEl.style.animation = 'none'; // лучом управляет JS, а не CSS-fallback
+  const apFrame = ts => {
+    if (apLast) {
+      apAngle = (apAngle + (ts - apLast) / SWEEP_PERIOD * 360) % 360;
+      if (sweepEl) sweepEl.style.transform = `rotate(${apAngle}deg)`;
+      const cur = systemNodes[Math.floor(apAngle / 90) % systemNodes.length];
+      if (cur && !cur.classList.contains('is-active')) selectSystemNode(cur);
+      cur?.style.setProperty('--ap-progress', ((apAngle % 90) / 90).toFixed(3));
+    }
+    apLast = ts;
+    apRaf = requestAnimationFrame(apFrame);
   };
-  const pauseSystemAutoplay = () => { clearInterval(apTimer); apTimer = null; systemMap?.classList.remove('is-autoplay'); };
-  function stopSystemAutoplay(){ apStopped = true; pauseSystemAutoplay(); }
+  const startSystemAutoplay = () => {
+    if (apStopped || apReduced || apRaf || !systemMap || !systemNodes.length) return;
+    systemMap.classList.add('is-autoplay');
+    apRaf = requestAnimationFrame(apFrame);
+  };
+  const pauseSystemAutoplay = () => { cancelAnimationFrame(apRaf); apRaf = 0; apLast = 0; systemMap?.classList.remove('is-autoplay'); };
+  function stopSystemAutoplay(){ apStopped = true; pauseSystemAutoplay(); systemMap?.classList.add('is-user-controlled'); }
   if (systemMap && 'IntersectionObserver' in window) {
     new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? startSystemAutoplay() : pauseSystemAutoplay()), {threshold:.35}).observe(systemMap);
     systemMap.addEventListener('pointerenter', pauseSystemAutoplay);
