@@ -19,7 +19,7 @@
 .radar-pulse.p2{animation-delay:1.2s}
 .radar-pulse.p3{animation-delay:2.4s}
 @keyframes radarPulse{0%{transform:translate(-50%,-50%) scale(1);opacity:.6}100%{transform:translate(-50%,-50%) scale(2.15);opacity:0}}
-.radar-sweep{position:absolute;left:50%;top:50%;width:480px;height:480px;margin:-240px 0 0 -240px;border-radius:50%;background:conic-gradient(from 0deg,rgba(118,84,246,.4),transparent 24%,transparent 100%);animation:radarSpin 6s linear infinite;pointer-events:none;z-index:1;mix-blend-mode:screen}
+.radar-sweep{position:absolute;left:50%;top:50%;width:480px;height:480px;margin:-240px 0 0 -240px;border-radius:50%;background:conic-gradient(from 0deg,rgba(118,84,246,.4),transparent 24%,transparent 100%);animation:radarSpin 20s linear infinite;pointer-events:none;z-index:1;mix-blend-mode:screen}
 @keyframes radarSpin{to{transform:rotate(360deg)}}
 .system-core{width:250px;height:250px;box-shadow:0 0 0 26px rgba(118,84,246,.08),0 26px 70px rgba(0,0,0,.28);z-index:3;animation:coreGlow 3.6s ease-in-out infinite}
 @keyframes coreGlow{0%,100%{box-shadow:0 0 0 26px rgba(118,84,246,.08),0 26px 70px rgba(0,0,0,.28)}50%{box-shadow:0 0 0 32px rgba(118,84,246,.16),0 26px 80px rgba(0,0,0,.32)}}
