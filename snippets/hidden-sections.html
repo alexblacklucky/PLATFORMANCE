@@ -1,0 +1,47 @@
+<!--
+  ХРАНИЛИЩЕ ВРЕМЕННО СКРЫТЫХ СЕКЦИЙ САЙТА
+  Скрыты по просьбе владельца 2026-08-07 (PR #10).
+
+  Как вернуть:
+  1. Секцию #process вставить в index.html между </section> секции #us («Кому подходит»)
+     и <section id="rhythm"> (или #team, если rhythm тоже скрыт).
+  2. Секцию #rhythm вставить сразу после секции #process.
+  3. Вернуть пункт меню «Как работаем» (<a href="#process">Как работаем</a>) в три места:
+     - десктоп-меню (.desktop-nav, после ссылки «Система»),
+     - мобильное меню (.mobile-menu, после ссылки «Система»),
+     - футер (.footer-col «Навигация», после ссылки «Система»).
+  4. Динамический v2-слой трогать не нужно: v2-dom-2-2.js (process) и v2-dom-2-3.js (rhythm)
+     остались в списке files в config.js — при появлении секций в DOM они снова
+     подхватятся автоматически; пока секций нет, эти файлы просто ничего не делают.
+-->
+
+<!-- ======== СЕКЦИЯ «КАК НАЧИНАЕТСЯ РАБОТА» (#process) ======== -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="section-head split reveal"><div><span class="eyebrow">Как начинается работа</span><h2>Сначала анализ — затем предложение и план</h2></div><p>Мы не обещаем результат до изучения продукта, экономики и текущей ситуации.</p></div>
+    <ol class="process-line">
+      <li class="reveal"><span>01</span><h3>Заявка</h3><p>Вы присылаете магазин, товар или описание задачи.</p></li>
+      <li class="reveal"><span>02</span><h3>Знакомство</h3><p>Уточняем цели, ограничения, команду и ресурсы.</p></li>
+      <li class="reveal"><span>03</span><h3>Анализ</h3><p>Изучаем кабинет, продукт, экономику и процессы.</p></li>
+      <li class="reveal"><span>04</span><h3>Встреча</h3><p>Показываем выводы, риски и приоритетные действия.</p></li>
+      <li class="reveal"><span>05</span><h3>Предложение</h3><p>Фиксируем формат, команду, отчётность и стоимость.</p></li>
+      <li class="reveal"><span>06</span><h3>Онбординг</h3><p>Получаем доступы и запускаем рабочий регламент.</p></li>
+    </ol>
+    <div class="center-action reveal"><a class="btn btn-primary btn-lg" href="#audit">Показать проект специалисту</a></div>
+  </div>
+</section>
+
+<!-- ======== СЕКЦИЯ «РЕГЛАМЕНТ РАБОТЫ» (#rhythm) ======== -->
+<section class="section section-dark" id="rhythm">
+  <div class="container">
+    <div class="section-head section-head-light reveal"><span class="eyebrow eyebrow-light">Регламент работы</span><h2>Прозрачный ритм контроля и развития</h2></div>
+    <div class="rhythm-grid">
+      <article class="rhythm-card reveal"><span>Каждый день</span><h3>Операционный контроль</h3><ul><li>Реклама и ключевые показатели</li><li>Отзывы, вопросы и критические отклонения</li><li>Контроль проблем по кабинету</li></ul></article>
+      <article class="rhythm-card featured reveal delay-1"><span>Каждую неделю</span><h3>Аналитика и план действий</h3><ul><li>Изменения по продажам и рекламе</li><li>Поставки, остатки и ассортимент</li><li>Приоритеты команды на следующую неделю</li></ul></article>
+      <article class="rhythm-card reveal delay-2"><span>Каждый месяц</span><h3>Финансы и стратегия</h3><ul><li>P&amp;L и финансовые выводы</li><li>Разбор результатов и гипотез</li><li>Обновление плана масштабирования</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ПУНКТ МЕНЮ (вернуть в .desktop-nav, .mobile-menu и футер) ======== -->
+<!-- <a href="#process">Как работаем</a> -->
