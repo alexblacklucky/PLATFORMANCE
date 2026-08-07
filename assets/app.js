@@ -94,6 +94,29 @@
     systemMap.addEventListener('pointerleave', startSystemAutoplay);
   }
 
+  // Слайдер кейсов: scroll-snap листается свайпом, стрелки докручивают до соседнего слайда
+  const caseSlider = $('[data-case-slider]');
+  if (caseSlider) {
+    const track = $('[data-cs-track]', caseSlider);
+    const slides = $$('.cs-slide', track);
+    const counter = $('[data-cs-counter]', caseSlider);
+    const prevBtn = $('[data-cs-prev]', caseSlider);
+    const nextBtn = $('[data-cs-next]', caseSlider);
+    const step = () => slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth;
+    const index = () => Math.round(track.scrollLeft / step());
+    const update = () => {
+      const i = Math.min(slides.length - 1, Math.max(0, index()));
+      if (counter) counter.textContent = `${i + 1} / ${slides.length}`;
+      if (prevBtn) prevBtn.toggleAttribute('disabled', i === 0);
+      if (nextBtn) nextBtn.toggleAttribute('disabled', i === slides.length - 1);
+    };
+    prevBtn?.addEventListener('click', () => track.scrollTo({left: (index() - 1) * step(), behavior: reduceMotion ? 'auto' : 'smooth'}));
+    nextBtn?.addEventListener('click', () => track.scrollTo({left: (index() + 1) * step(), behavior: reduceMotion ? 'auto' : 'smooth'}));
+    track.addEventListener('scroll', update, {passive: true});
+    addEventListener('resize', update, {passive: true});
+    update();
+  }
+
   const serviceContent = {
     cards: ['Карточки и контент','Анализ конкурентов, позиционирование, SEO, заполнение характеристик, инфографика, фото и видео, работа с вариациями и контроль качества карточек.','Понятная структура товара, корректная индексация и база для эффективной рекламы.'],
     supply: ['Поставки и остатки','Прогноз спроса, расчёт поставок, создание отгрузок, распределение по складам, управление FBO/FBS, контроль оборачиваемости и предотвращение дефицита.','Стабильная доступность приоритетных SKU и меньше денег в избыточных запасах.'],
