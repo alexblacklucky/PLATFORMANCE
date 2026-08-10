@@ -56,3 +56,6 @@
 /* Фикс 2026-08-10: читаемость пунктов в тёмном блоке аудита — b оставался тёмно-синим, номера сливались с подложкой */
 .site-v2 .audit-section-premium .audit-points b{color:#fff}
 .site-v2 .audit-section-premium .audit-points>div>span{background:rgba(255,255,255,.14);color:#e9e4ff}
+/* Фикс 2026-08-10: подписи под скриншотами кейсов — крупнее и с подчёркиванием */
+.site-v2 .cs-slide figcaption{font-size:19px;text-decoration:underline;text-decoration-color:#6548e8;text-decoration-thickness:2px;text-underline-offset:6px}
+@media(max-width:880px){.site-v2 .cs-slide figcaption{font-size:16px}}
