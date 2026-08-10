@@ -45,3 +45,24 @@
 
 <!-- ======== ПУНКТ МЕНЮ (вернуть в .desktop-nav, .mobile-menu и футер) ======== -->
 <!-- <a href="#process">Как работаем</a> -->
+
+
+<!-- ======== СЕКЦИЯ «КЕЙСЫ» (#cases) — скрыта 2026-08-10 (PR #20) ========
+  Как вернуть:
+  1. Вставить секцию ниже в index.html между </section> секции #case-gallery
+     и <section id="comparison">.
+  2. Ссылки «Кейсы» в десктоп-меню, мобильном меню и футере сейчас ведут на
+     #case-gallery — вернуть им href="#cases".
+  3. Модалки кейсов работают через data-case-open (обработчики в app.js остались),
+     v2-patches.js снова навесит классы cases-section/case-grid-rich автоматически.
+-->
+<section class="section" id="cases">
+  <div class="container">
+    <div class="section-head split reveal"><div><span class="eyebrow">Кейсы</span><h2>Результат показываем через исходную ситуацию и выполненную работу</h2></div><p>Показатели и подтверждающие материалы публикуем только после согласования с клиентом.</p></div>
+    <div class="case-grid">
+      <article class="case-card reveal"><div class="case-top"><span>Товары для дома</span><em>Комплексное ведение</em></div><h3>Управление остатками, пересчёт экономики и системная реклама</h3><p>Проект с высокой долей out of stock и хаотичными скидками. Команда связала поставки, цены и рекламу в один план.</p><ul><li>Прогноз и контроль точек заказа</li><li>Юнит-экономика по ключевым SKU</li><li>Оптимизация рекламной структуры</li></ul><button class="card-link" data-case-open="home">Разобрать кейс <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></article>
+      <article class="case-card reveal delay-1"><div class="case-top"><span>Косметика</span><em>Карточки + реклама + финансы</em></div><h3>Единый стандарт контента и прозрачность прибыли по SKU</h3><p>Перестроили карточки, рекламные кампании и финансовую отчётность, чтобы решения принимались на основе показателей.</p><ul><li>Новая структура карточек и УТП</li><li>Системные рекламные кампании</li><li>P&amp;L и контроль маржинальности</li></ul><button class="card-link" data-case-open="cosmetics">Разобрать кейс <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></article>
+    </div>
+    <p class="source-note">Числовые результаты из презентации компании не вынесены в публичный сайт до отдельного подтверждения.</p>
+  </div>
+</section>
