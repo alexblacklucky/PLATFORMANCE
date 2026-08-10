@@ -33,3 +33,10 @@
 .lead-dialog::backdrop{background:rgba(23,19,63,.72);backdrop-filter:blur(5px)}
 .lead-dialog .form-card{max-height:calc(100dvh - 48px);overflow:auto}
 .lead-dialog .dialog-close{position:absolute;right:10px;top:8px;z-index:3}
+.b24-form-slot{min-height:220px}
+.b24-form-slot.is-failed{min-height:0}
+.b24-fallback p{color:#3d3568;margin:0 0 14px}
+.b24-fallback b{color:#251e63}
+.b24-fallback-links{display:flex;flex-wrap:wrap;gap:10px 22px}
+.b24-fallback-links a{color:#6548e8;font-weight:800;text-decoration:none;border-bottom:2px solid rgba(101,72,232,.35)}
+.b24-fallback-links a:hover{border-bottom-color:#6548e8}

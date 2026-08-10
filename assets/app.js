@@ -257,4 +257,24 @@
     leadDialog.addEventListener('click', e => { if (e.target === leadDialog) leadDialog.close(); });
     leadDialog.addEventListener('close', () => leadHome.appendChild(leadCard));
   }
+
+  // Bitrix24-форма заявки: виджет монтируется загрузчиком с CDN в .b24-form-slot.
+  // Если за 8 секунд контейнер виджета так и не появился (блокировщик рекламы,
+  // недоступный CDN) — показываем запасные контакты вместо пустой карточки.
+  const b24Slot = $('[data-b24-slot]');
+  const b24Fallback = $('[data-b24-fallback]');
+  if (b24Slot && b24Fallback) {
+    let waited = 0;
+    const b24Check = setInterval(() => {
+      if (b24Slot.querySelector('div')) {
+        b24Fallback.hidden = true;
+        b24Slot.classList.remove('is-failed');
+        clearInterval(b24Check);
+      } else if ((waited += 500) >= 8000) {
+        b24Fallback.hidden = false;
+        b24Slot.classList.add('is-failed');
+        clearInterval(b24Check);
+      }
+    }, 500);
+  }
 })();
