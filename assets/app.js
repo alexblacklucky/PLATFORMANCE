@@ -233,4 +233,28 @@
       banner.remove();
     });
   }
+
+  // Модальная заявка: ссылки на #audit открывают форму на месте, без прокрутки страницы.
+  // Карточка формы переносится в <dialog> на время показа и возвращается назад при закрытии.
+  const leadDialog = $('[data-lead-dialog]');
+  const leadCard = $('#audit .form-card');
+  if (leadDialog && leadCard && typeof leadDialog.showModal === 'function') {
+    const leadHome = leadCard.parentElement;
+    const leadSlot = $('.lead-dialog-slot', leadDialog);
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[href="#audit"]');
+      if (!link) return;
+      e.preventDefault();
+      e.stopPropagation(); // иначе сработает общий обработчик плавной прокрутки к якорю
+      closeMenu();
+      const info = $('[data-info-dialog]');
+      if (info?.open) info.close();
+      leadSlot.appendChild(leadCard);
+      leadDialog.showModal();
+      $('input:not([type="hidden"])', leadCard)?.focus();
+    }, true);
+    $('[data-lead-dialog-close]', leadDialog).addEventListener('click', () => leadDialog.close());
+    leadDialog.addEventListener('click', e => { if (e.target === leadDialog) leadDialog.close(); });
+    leadDialog.addEventListener('close', () => leadHome.appendChild(leadCard));
+  }
 })();
