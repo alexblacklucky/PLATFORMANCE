@@ -246,8 +246,46 @@ function drawMatrix(){
   c.onmousemove=moveTip;c.onmouseleave=()=>{c.setAttribute('fill-opacity','.62');hideTip();};
   c.onclick=()=>{location.hash='';openNiche(n.niche);};
   svg.appendChild(c);
-  if(r>13){const t=document.createElementNS(SVG,'text');t.setAttribute('x',cx);t.setAttribute('y',cy+3);t.setAttribute('font-size','9');t.setAttribute('fill','#fff');t.setAttribute('text-anchor','middle');t.setAttribute('font-weight','600');t.style.pointerEvents='none';t.textContent=n.niche.length>11?n.niche.slice(0,10)+'…':n.niche;svg.appendChild(t);}
  });
+ drawLabels(svg,X,Y,R);
+}
+// Подписи поверх всех пузырей: тёмный текст с белым ореолом, без обрезки (до 2 строк),
+// позиция подбирается из 4 вариантов так, чтобы подписи не накладывались друг на друга.
+function drawLabels(svg,X,Y,R){
+ const LH=11,FS=10,CW=5.7,MAXL=16;
+ const cand=D.niches.filter(n=>!off.has(n.quadrant))
+  .map(n=>({n,cx:X(n.comp_index),cy:Y(n.demand_index),r:R(n.revenue)}))
+  .sort((a,b)=>(b.n.quadrant==='Золотая ниша')-(a.n.quadrant==='Золотая ниша')||b.r-a.r);
+ const placed=[];let cnt=0;
+ const fits=b=>b.x>=mx.l-6&&b.x+b.w<=mx.w-mx.r+6&&b.y>=mx.t&&b.y+b.h<=mx.t+(mx.h-mx.t-mx.b)&&!placed.some(p=>b.x<p.x+p.w+3&&p.x<b.x+b.w+3&&b.y<p.y+p.h+2&&p.y<b.y+b.h+2);
+ for(const o of cand){
+  if(cnt>=MAXL&&o.n.quadrant!=='Золотая ниша')continue;
+  const words=o.n.niche.split(' '),lines=[''];
+  for(const w of words){
+   const cur=lines[lines.length-1];
+   if((cur+' '+w).trim().length<=15)lines[lines.length-1]=(cur+' '+w).trim();
+   else if(lines.length<3)lines.push(w.length>15?w.slice(0,14)+'…':w);
+   else{const last=lines.length-1;if(!lines[last].endsWith('…'))lines[last]+='…';break;}
+  }
+  const lw=Math.max(...lines.map(s=>s.length))*CW,lh=lines.length*LH;
+  const spots=[
+   {x:o.cx+o.r+5,y:o.cy-lh/2,anc:'start',ax:o.cx+o.r+5},
+   {x:o.cx-o.r-5-lw,y:o.cy-lh/2,anc:'end',ax:o.cx-o.r-5},
+   {x:o.cx-lw/2,y:o.cy+o.r+3,anc:'middle',ax:o.cx},
+   {x:o.cx-lw/2,y:o.cy-o.r-3-lh,anc:'middle',ax:o.cx}
+  ];
+  const s=spots.find(sp=>fits({x:sp.x,y:sp.y,w:lw,h:lh}));
+  if(!s)continue;
+  placed.push({x:s.x,y:s.y,w:lw,h:lh});cnt++;
+  const t=document.createElementNS(SVG,'text');
+  t.setAttribute('x',s.ax);t.setAttribute('y',s.y+FS);
+  t.setAttribute('font-size',FS);t.setAttribute('font-weight','650');
+  t.setAttribute('fill','#38306b');t.setAttribute('text-anchor',s.anc);
+  t.setAttribute('stroke','#fff');t.setAttribute('stroke-width','3');t.setAttribute('paint-order','stroke');
+  t.setAttribute('stroke-linejoin','round');t.style.pointerEvents='none';
+  lines.forEach((ln,i)=>{const ts=document.createElementNS(SVG,'tspan');ts.setAttribute('x',s.ax);if(i)ts.setAttribute('dy',LH);ts.textContent=ln;t.appendChild(ts);});
+  svg.appendChild(t);
+ }
 }
 function median(a){const s=[...a].sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;}
 
