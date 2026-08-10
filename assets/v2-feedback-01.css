@@ -53,3 +53,6 @@
 /* Фикс 2026-08-10: split-шапки секций снова на всю ширину контейнера (max-width:1040px их зажимал) */
 .site-v2 .section-head.split{max-width:none}
 .site-v2 .section-head.split h2{max-width:none}
+/* Фикс 2026-08-10: читаемость пунктов в тёмном блоке аудита — b оставался тёмно-синим, номера сливались с подложкой */
+.site-v2 .audit-section-premium .audit-points b{color:#fff}
+.site-v2 .audit-section-premium .audit-points>div>span{background:rgba(255,255,255,.14);color:#e9e4ff}
