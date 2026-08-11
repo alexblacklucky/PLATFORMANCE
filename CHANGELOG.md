@@ -6,6 +6,10 @@
 
 ## 2026-08-11
 
+### PR #28 — Память проекта: итоги сессии 2026-08-11
+Правка только документации. В `CLAUDE.md` добавлен раздел о сессии 2026-08-11 (PR #23–#28): интеграция Bitrix24 закрыта полностью; выучена ловушка top layer (`showModal()` перекрывает любые z-index — попапы Bitrix24 и cookie-баннер живут в `body`, поэтому модалка открывается через `show()`); хроника переезда на platformance.ru, включая смену DNS-серверов с хостинговых на обычные reg.ru. Зафиксировано состояние на конец сессии: Pages-деплой с доменом успешен, но у пользователя DNS-кэш ещё отдавал заглушку хостинга — следующая сессия начинается с проверки домена, Enforce HTTPS и финального прогона (сертификат, редиректы, canonical, форма).
+Файлы: `CLAUDE.md`, `CHANGELOG.md`
+
 ### PR #27 — Сайт переведён на собственный домен platformance.ru
 Пользователь купил на reg.ru домены `platformance.ru` (основной) и `platformance.online` (про запас) и — по инструкции из сессии — перевёл DNS-зону с хостинговых серверов на `ns1/ns2.reg.ru`, прописал 4 A-записи `@` на IP GitHub Pages (185.199.108–111.153) и CNAME `www` → `alexblacklucky.github.io`. В коде: добавлен файл `CNAME` (переключает GitHub Pages на кастомный домен), прежний служебный домен `uhjr7sv23.urest.org` заменён на `https://platformance.ru` во всех местах — canonical и OG-теги (`og:url`, `og:image`) в `index.html`, весь JSON-LD-граф (Organization/WebSite/Service), canonical в `privacy.html`, `robots.txt` (ссылка на sitemap), `sitemap.xml` (оба `loc` + обновлены `lastmod`), инструкция в `README.md`. Основной адрес — без `www` (с `www` GitHub отдаёт 301). Остались шаги на стороне пользователя: включить Enforce HTTPS в настройках Pages после прохождения DNS-проверки и обновить две ссылки в Bitrix24 — записано в открытые задачи.
 Файлы: `CNAME` (новый), `index.html`, `privacy.html`, `robots.txt`, `sitemap.xml`, `README.md`, `CLAUDE.md`, `CHANGELOG.md`
