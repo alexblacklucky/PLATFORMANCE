@@ -48,7 +48,7 @@ window.PLATFORMANCE_CONFIG = {
 
 ## Как заменить домен
 
-Найдите в файлах строку `https://uhjr7sv23.urest.org/` и замените её на новый основной домен. После этого обновите `sitemap.xml` и `robots.txt`.
+Найдите в файлах строку `https://platformance.ru/` и замените её на новый основной домен. После этого обновите `sitemap.xml` и `robots.txt`.
 
 ## Аналитика
 

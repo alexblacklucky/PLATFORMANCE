@@ -6,6 +6,10 @@
 
 ## 2026-08-11
 
+### PR #27 — Сайт переведён на собственный домен platformance.ru
+Пользователь купил на reg.ru домены `platformance.ru` (основной) и `platformance.online` (про запас) и — по инструкции из сессии — перевёл DNS-зону с хостинговых серверов на `ns1/ns2.reg.ru`, прописал 4 A-записи `@` на IP GitHub Pages (185.199.108–111.153) и CNAME `www` → `alexblacklucky.github.io`. В коде: добавлен файл `CNAME` (переключает GitHub Pages на кастомный домен), прежний служебный домен `uhjr7sv23.urest.org` заменён на `https://platformance.ru` во всех местах — canonical и OG-теги (`og:url`, `og:image`) в `index.html`, весь JSON-LD-граф (Organization/WebSite/Service), canonical в `privacy.html`, `robots.txt` (ссылка на sitemap), `sitemap.xml` (оба `loc` + обновлены `lastmod`), инструкция в `README.md`. Основной адрес — без `www` (с `www` GitHub отдаёт 301). Остались шаги на стороне пользователя: включить Enforce HTTPS в настройках Pages после прохождения DNS-проверки и обновить две ссылки в Bitrix24 — записано в открытые задачи.
+Файлы: `CNAME` (новый), `index.html`, `privacy.html`, `robots.txt`, `sitemap.xml`, `README.md`, `CLAUDE.md`, `CHANGELOG.md`
+
 ### PR #26 — Память проекта: секции скрыты насовсем, запущена задача нового домена
 Правка только документации. Зафиксированы два решения пользователя: (1) секции «Как начинается работа» и «Регламент работы» остаются скрытыми насовсем (разметка — в `snippets/hidden-sections.html` для будущих доработок; проверено grep'ом — на всех четырёх страницах сайта ноль упоминаний, возврат не предлагать); (2) вместо ревизии старого canonical-домена `uhjr7sv23.urest.org` пользователь покупает новый домен под название платформы — `platformance.com` занят, `platformance.ru` вероятно свободен, выданы шаги покупки/настройки DNS; чек-лист правок кода после покупки записан в открытые задачи.
 Файлы: `CLAUDE.md`, `CHANGELOG.md`
