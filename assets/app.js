@@ -236,9 +236,12 @@
 
   // Модальная заявка: ссылки на #audit открывают форму на месте, без прокрутки страницы.
   // Карточка формы переносится в <dialog> на время показа и возвращается назад при закрытии.
+  // Открываем show(), а не showModal(): top-layer модального диалога перекрывал бы попапы
+  // Bitrix24 (окно с текстом соглашения) и cookie-баннер — они лежат в body со своим z-index.
+  // Затемнение и центрирование делает CSS (.lead-dialog растянут на весь экран), Esc — ниже руками.
   const leadDialog = $('[data-lead-dialog]');
   const leadCard = $('#audit .form-card');
-  if (leadDialog && leadCard && typeof leadDialog.showModal === 'function') {
+  if (leadDialog && leadCard && typeof leadDialog.show === 'function') {
     const leadHome = leadCard.parentElement;
     const leadSlot = $('.lead-dialog-slot', leadDialog);
     document.addEventListener('click', e => {
@@ -250,11 +253,12 @@
       const info = $('[data-info-dialog]');
       if (info?.open) info.close();
       leadSlot.appendChild(leadCard);
-      leadDialog.showModal();
+      leadDialog.show();
       $('input:not([type="hidden"])', leadCard)?.focus();
     }, true);
     $('[data-lead-dialog-close]', leadDialog).addEventListener('click', () => leadDialog.close());
     leadDialog.addEventListener('click', e => { if (e.target === leadDialog) leadDialog.close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && leadDialog.open) leadDialog.close(); });
     leadDialog.addEventListener('close', () => leadHome.appendChild(leadCard));
   }
 
