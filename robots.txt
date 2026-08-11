@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /thank-you.html
 
-Sitemap: https://uhjr7sv23.urest.org/sitemap.xml
+Sitemap: https://platformance.ru/sitemap.xml
