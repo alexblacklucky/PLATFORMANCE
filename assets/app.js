@@ -60,14 +60,14 @@
       detail.classList.remove('is-changing');
     }, 150);
   };
-  systemNodes.forEach(btn => btn.addEventListener('click', () => { stopSystemAutoplay(); selectSystemNode(btn); }));
+  systemNodes.forEach(btn => btn.addEventListener('click', () => selectSystemNode(btn)));
 
   // Автопилот блока «Система»: луч радара ведёт по кругу, узел активируется в момент прохода луча.
   // Узлы стоят в кардинальных точках (0/90/180/270°), порядок в DOM совпадает с ходом луча по часовой.
   const systemMap = $('.system-map');
   const sweepEl = $('.radar-sweep');
   const SWEEP_PERIOD = 20000; // полный оборот луча; смена узла — каждые SWEEP_PERIOD/4
-  let apRaf = 0, apLast = 0, apAngle = 0, apStopped = false;
+  let apRaf = 0, apLast = 0, apAngle = 0;
   const apReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (sweepEl && !apReduced) sweepEl.style.animation = 'none'; // лучом управляет JS, а не CSS-fallback
   const apFrame = ts => {
@@ -82,12 +82,11 @@
     apRaf = requestAnimationFrame(apFrame);
   };
   const startSystemAutoplay = () => {
-    if (apStopped || apReduced || apRaf || !systemMap || !systemNodes.length) return;
+    if (apReduced || apRaf || !systemMap || !systemNodes.length) return;
     systemMap.classList.add('is-autoplay');
     apRaf = requestAnimationFrame(apFrame);
   };
   const pauseSystemAutoplay = () => { cancelAnimationFrame(apRaf); apRaf = 0; apLast = 0; systemMap?.classList.remove('is-autoplay'); };
-  function stopSystemAutoplay(){ apStopped = true; pauseSystemAutoplay(); systemMap?.classList.add('is-user-controlled'); }
   if (systemMap && 'IntersectionObserver' in window) {
     new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? startSystemAutoplay() : pauseSystemAutoplay()), {threshold:.35}).observe(systemMap);
     systemMap.addEventListener('pointerenter', pauseSystemAutoplay);
