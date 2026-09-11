@@ -171,3 +171,67 @@
   /* --- «Отчётность»: разбор по нишам на телефоне не показываем --- */
   .site-v2 #reports .report-windows .report-window:nth-child(2){display:none}
 }
+
+/* Правка 2026-09-11 (3): мобильная компактность «Заявки», «Контактов», «Вопросов» и футера.
+   Главный баг: .audit-grid оставалась в две колонки (220px + 261px при контейнере 360px),
+   из-за чего карточка формы уезжала за правый край экрана на 149px и была обрезана. */
+@media (max-width:640px){
+  /* --- Заявка на разбор: сетка в один столбец, иначе форма не помещается --- */
+  .site-v2 #audit{padding:36px 0}
+  .site-v2 #audit .audit-grid{grid-template-columns:1fr;gap:16px}
+  .site-v2 #audit .audit-info{padding-top:0}
+  .site-v2 #audit .audit-info h2{font-size:24px;line-height:1.18;margin-bottom:10px}
+  .site-v2 #audit .audit-info .eyebrow{margin-bottom:10px}
+  .site-v2 #audit .audit-lead{font-size:15.5px;line-height:1.5;margin-bottom:14px}
+  .site-v2 #audit .audit-points{gap:8px}
+  .site-v2 #audit .audit-points>*{padding:11px 13px;font-size:14px;line-height:1.45}
+  .site-v2 #audit .audit-deliverable{padding:14px 16px;font-size:14px;line-height:1.45}
+  .site-v2 #audit .safe-step{padding:14px 16px;font-size:14px;line-height:1.45}
+  .site-v2 #audit .safe-step b,.site-v2 #audit .audit-deliverable b{font-size:15px}
+  .site-v2 #audit .form-card{padding:16px}
+  .site-v2 #audit .form-card-head h2{font-size:21px;line-height:1.2;margin-bottom:8px}
+  .site-v2 #audit .form-card-head p{font-size:14px;line-height:1.45}
+
+  /* --- Контакты --- */
+  .site-v2 #contacts{padding:36px 0}
+  .site-v2 #contacts .section-head{margin-bottom:18px;gap:8px}
+  .site-v2 #contacts .section-head h2{font-size:25px;line-height:1.16;margin-bottom:10px}
+  .site-v2 #contacts .section-head p{font-size:15.5px;line-height:1.5}
+  .site-v2 #contacts .contact-grid{gap:10px}
+  /* у карточки жёсткая min-height:190px, поля и шрифты без её снятия ничего не дают,
+     а у значения и подписи стоят отступы 38px и margin-top:auto */
+  .site-v2 #contacts .contact-card{padding:14px 16px;gap:4px;min-height:0}
+  .site-v2 #contacts .contact-card b{margin:8px 0 6px}
+  .site-v2 #contacts .contact-card em{margin-top:4px}
+  .site-v2 #contacts .contact-card span:first-child{font-size:11px}
+  .site-v2 #contacts .contact-card b,.site-v2 #contacts .contact-card strong{font-size:17px;line-height:1.25}
+  .site-v2 #contacts .contact-card p,.site-v2 #contacts .contact-card small{font-size:13px;line-height:1.4}
+
+  /* --- Вопросы и ответы --- */
+  .site-v2 #faq{padding:36px 0}
+  .site-v2 #faq .faq-layout{gap:16px}
+  .site-v2 #faq .section-head{margin-bottom:0}
+  .site-v2 #faq .section-head h2{font-size:25px;line-height:1.16;margin-bottom:10px}
+  .site-v2 #faq .section-head .eyebrow{margin-bottom:10px}
+  .site-v2 #faq .section-head p{font-size:15.5px;line-height:1.5;margin-bottom:12px}
+  .site-v2 #faq .section-head .btn{padding:9px 16px;font-size:14px}
+  .site-v2 #faq .faq-item{margin-bottom:8px}
+  .site-v2 #faq .faq-item summary{padding:12px 42px 12px 14px;font-size:15px;line-height:1.3}
+  .site-v2 #faq .faq-item p{padding:0 14px 12px;font-size:14px;line-height:1.45}
+
+  /* --- Футер: колонки в два столбца вместо длинного списка --- */
+  .site-v2 .site-footer{padding-top:40px}
+  .site-v2 .footer-grid{grid-template-columns:1fr 1fr;gap:20px 16px}
+  .site-v2 .footer-grid .footer-brand{grid-column:1 / -1}
+  .site-v2 .footer-grid .footer-brand p{font-size:14px;line-height:1.45}
+  .site-v2 .footer-col{gap:7px}
+  .site-v2 .footer-col strong{font-size:15px}
+  .site-v2 .footer-col a,.site-v2 .footer-col span{font-size:13.5px}
+  .site-v2 .footer-bottom{padding-top:14px}
+  .site-v2 .footer-bottom span{font-size:11.5px;line-height:1.4}
+}
+
+/* Баг, найденный 2026-09-11: секция #audit тёмная, заголовки в ней наследуют белый цвет,
+   но карточка формы .form-card — белая. Заголовок «Расскажите о проекте» был белым
+   на белом и не читался НИ на одной ширине, включая десктоп. Вне медиазапроса. */
+.site-v2 #audit .form-card-head h2{color:#251e63}
