@@ -62,3 +62,45 @@
 /* Правка 2026-08-12: фиолетовое свечение — светлее и на всех карточках-услугах с белым фоном */
 .site-v2 .service-bento .service-card-featured:after{background:radial-gradient(circle,#efeaff,transparent 70%);opacity:.9}
 .site-v2 .service-bento .service-card:not(.service-card-featured):not(.service-card-dark):after{content:"";position:absolute;width:290px;height:290px;border-radius:50%;right:-100px;bottom:-90px;background:radial-gradient(circle,#efeaff,transparent 70%);opacity:.9;pointer-events:none}
+
+/* Правка 2026-09-11: мобильная компактность блоков «Узнаёте ситуацию?» и «Система».
+   Только для экранов до 640px — десктоп не затронут.
+   Плюс фикс: у .system-core на мобильном оставался translate(-50%,-50%) от
+   абсолютного позиционирования, из-за чего ядро уезжало за левый край экрана. */
+@media (max-width:640px){
+  /* --- общее для обеих секций --- */
+  .site-v2 #problems,.site-v2 #system{padding:40px 0}
+  .site-v2 #problems .section-head,.site-v2 #system .section-head{margin-bottom:22px}
+  .site-v2 #problems .section-head .eyebrow,.site-v2 #system .section-head .eyebrow{margin-bottom:10px}
+  .site-v2 #problems .section-head h2,.site-v2 #system .section-head h2{font-size:26px;line-height:1.16;margin-bottom:10px}
+  .site-v2 #problems .section-head p{font-size:16px;line-height:1.5}
+  .site-v2 #system .section-head p{font-size:17px;line-height:1.5}
+
+  /* --- «Узнаёте ситуацию?»: шесть карточек болей --- */
+  .site-v2 #problems .problem-grid{gap:10px}
+  .site-v2 #problems .problem-card{padding:15px 16px;min-height:0}
+  .site-v2 #problems .problem-card .problem-icon{width:34px;height:34px;font-size:17px;line-height:34px}
+  .site-v2 #problems .problem-card h3{font-size:19px;line-height:1.22;margin:10px 0 6px}
+  .site-v2 #problems .problem-card p{font-size:15px;line-height:1.45}
+  .site-v2 #problems .problem-card>span{right:14px;top:13px}
+  .site-v2 #problems .insight{padding:18px;margin-top:12px;gap:10px}
+  .site-v2 #problems .insight p{font-size:16px;line-height:1.5}
+
+  /* --- «Система»: радар, карточка деталей, четыре плитки --- */
+  .site-v2 #system .system-layout{gap:20px;margin-top:4px}
+  .site-v2 #system .system-map{padding:12px;gap:8px}
+  .site-v2 #system .system-core{transform:none;width:100%;height:auto;padding:12px 14px;border-radius:16px}
+  .site-v2 #system .system-core b{font-size:19px;line-height:1.2;max-width:none}
+  .site-v2 #system .system-node{padding:8px 12px}
+  .site-v2 #system .system-detail{padding:18px}
+  .site-v2 #system .system-detail .detail-index{width:34px;height:34px;line-height:34px;font-size:13px}
+  .site-v2 #system .system-detail h3{font-size:20px;line-height:1.2;margin:10px 0 8px}
+  .site-v2 #system .system-detail>p{font-size:15px;line-height:1.5;margin:0 0 10px}
+  .site-v2 #system .system-detail ul{margin-bottom:12px}
+  .site-v2 #system .system-detail ul li{font-size:14px;line-height:1.45;margin:6px 0}
+  .site-v2 #system .system-insights{gap:10px;margin-top:14px}
+  .site-v2 #system .system-insights article{padding:14px 16px}
+  .site-v2 #system .system-insights article>span{width:28px;height:28px;line-height:28px;font-size:11px}
+  .site-v2 #system .system-insights article h3{font-size:18px;margin:8px 0 5px}
+  .site-v2 #system .system-insights article p{font-size:15px;line-height:1.45}
+}
