@@ -104,3 +104,70 @@
   .site-v2 #system .system-insights article h3{font-size:18px;margin:8px 0 5px}
   .site-v2 #system .system-insights article p{font-size:15px;line-height:1.45}
 }
+
+/* Правка 2026-09-11 (2): мобильная компактность «Услуг», «Для кого», «Команды»
+   и скрытие отчёта по нишам — на телефоне интерактивная матрица нечитаема.
+   Только до 640px, десктоп не затронут. */
+@media (max-width:640px){
+  /* --- общие шапки секций --- */
+  .site-v2 #services,.site-v2 #audience,.site-v2 #team,.site-v2 #reports{padding:36px 0}
+  .site-v2 #services .section-head,.site-v2 #audience .section-head,
+  .site-v2 #team .section-head,.site-v2 #reports .section-head{margin-bottom:20px;gap:8px}
+  .site-v2 #services .section-head h2,.site-v2 #audience .section-head h2,
+  .site-v2 #team .section-head h2,.site-v2 #reports .section-head h2{font-size:25px;line-height:1.16;margin-bottom:10px}
+  .site-v2 #services .section-head .eyebrow,.site-v2 #audience .section-head .eyebrow,
+  .site-v2 #team .section-head .eyebrow,.site-v2 #reports .section-head .eyebrow{margin-bottom:10px}
+  .site-v2 #services .section-head p,.site-v2 #audience .section-head p,
+  .site-v2 #team .section-head p,.site-v2 #reports .section-head p{font-size:15.5px;line-height:1.5}
+
+  /* --- «Что входит в работу»: шесть карточек услуг --- */
+  .site-v2 #services .service-grid{gap:10px}
+  .site-v2 #services .service-card{padding:14px 16px;margin-bottom:0;min-height:0}
+  .site-v2 #services .service-card .icon-box{width:30px;height:30px}
+  .site-v2 #services .service-card .icon-box svg{width:16px;height:16px}
+  .site-v2 #services .service-card h3{font-size:19px;line-height:1.2;margin:8px 0 5px}
+  .site-v2 #services .service-card p{font-size:14px;line-height:1.45;margin-bottom:8px}
+  .site-v2 #services .service-card .service-tags{margin:0 0 8px;gap:6px}
+  .site-v2 #services .service-card .service-tags span{font-size:11px;padding:5px 9px}
+  .site-v2 #services .service-card .card-link{font-size:13px}
+
+  /* --- «Для кого»: вкладки со сценариями --- */
+  .site-v2 #audience .scenario-shell{padding:8px}
+  .site-v2 #audience .tab-list{gap:6px;padding:4px}
+  .site-v2 #audience .tab-btn{padding:8px 12px;font-size:13px}
+  .site-v2 #audience .tab-panels{padding:12px}
+  .site-v2 #audience .tab-panel>div+div{margin-top:12px;padding-top:12px}
+  .site-v2 #audience .tab-panel h3{font-size:20px;line-height:1.2;margin:6px 0 8px}
+  .site-v2 #audience .tab-panel p{font-size:14.5px;line-height:1.45}
+  .site-v2 #audience .tab-panel ul{margin:8px 0 0}
+  .site-v2 #audience .tab-panel li{font-size:14px;line-height:1.45;margin:5px 0}
+
+  /* --- «Команда»: карточка управляющего и роли --- */
+  .site-v2 #team .team-layout{gap:12px}
+  .site-v2 #team .team-lead-card{padding:18px}
+  .site-v2 #team .team-lead-card .team-lead-icon{width:52px;height:52px;font-size:24px;line-height:52px}
+  .site-v2 #team .team-lead-card h3{font-size:22px;line-height:1.18;margin:10px 0 8px}
+  .site-v2 #team .team-lead-card p{font-size:14.5px;line-height:1.45}
+  .site-v2 #team .team-lead-card .team-lead-actions{gap:6px;margin-top:10px}
+  .site-v2 #team .team-lead-card .team-lead-actions span{font-size:12px;padding:6px 10px}
+  .site-v2 #team .team-roles{gap:8px}
+  .site-v2 #team .role-card{padding:13px 15px;min-height:0}
+  .site-v2 #team .role-card>span{width:28px;height:28px;line-height:28px;font-size:11px}
+  .site-v2 #team .role-card h3{font-size:18px;margin:8px 0 5px}
+  .site-v2 #team .role-card p{font-size:14px;line-height:1.45}
+  .site-v2 #team .team-note{padding:14px 16px;margin-top:12px;gap:10px}
+  .site-v2 #team .team-note b{font-size:15px;line-height:1.35}
+  .site-v2 #team .team-note span{font-size:13.5px;line-height:1.45}
+
+  /* вкладки в два столбца вместо четырёх рядов */
+  .site-v2 #audience .tab-list{grid-template-columns:1fr 1fr}
+  /* между блоками панели набегало ~70px: gap сетки плюс отступы и разделители */
+  .site-v2 #audience .tab-panel{gap:10px}
+  .site-v2 #audience .tab-panel>div{padding-bottom:8px}
+  .site-v2 #audience .tab-panel>div+div{margin-top:8px;padding-top:8px}
+  /* подпись под ролями: в две колонки на телефоне текст сжимался в столбик по слову */
+  .site-v2 #team .team-note{flex-direction:column;gap:8px}
+
+  /* --- «Отчётность»: разбор по нишам на телефоне не показываем --- */
+  .site-v2 #reports .report-windows .report-window:nth-child(2){display:none}
+}
