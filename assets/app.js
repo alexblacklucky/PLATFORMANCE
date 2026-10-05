@@ -261,6 +261,29 @@
     leadDialog.addEventListener('close', () => leadHome.appendChild(leadCard));
   }
 
+  // Плавающая кнопка «Связаться»: вместо звонка открывает меню «Позвонить / Оставить заявку».
+  // Без JS ссылка остаётся обычным tel:. Закрытие слушаем на window в фазе перехвата:
+  // обработчик заявки выше вызывает stopPropagation(), и клик по «Оставить заявку» иначе не дошёл бы.
+  const floatToggle = $('[data-floating-toggle]');
+  const floatMenu = $('[data-floating-menu]');
+  if (floatToggle && floatMenu) {
+    const setFloatMenu = open => {
+      floatMenu.hidden = !open;
+      floatToggle.setAttribute('aria-expanded', String(open));
+    };
+    floatToggle.addEventListener('click', e => {
+      e.preventDefault();
+      setFloatMenu(floatMenu.hidden);
+    });
+    window.addEventListener('click', e => {
+      if (floatMenu.hidden || e.target.closest('[data-floating-toggle]')) return;
+      if (!e.target.closest('[data-floating-menu]') || e.target.closest('a')) setFloatMenu(false);
+    }, true);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !floatMenu.hidden) { setFloatMenu(false); floatToggle.focus(); }
+    });
+  }
+
   // Bitrix24-форма заявки: виджет монтируется загрузчиком с CDN в .b24-form-slot.
   // Если за 8 секунд контейнер виджета так и не появился (блокировщик рекламы,
   // недоступный CDN) — показываем запасные контакты вместо пустой карточки.
