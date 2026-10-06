@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-10-06
+
+### SEO без изменения вида: служебные файлы закрыты от поиска, превью для мессенджеров, FAQ в разметке, значок сайта
+По итогам SEO-аудита и проверки `site:platformance.ru` в Яндексе (скриншот пользователя, 06.10): в поиске **8 страниц**, из них лишние — `README.md`, `reports/wb-pet-niche.html`, `reports/brand-analytics.html`. `README.md` робот нашёл по ссылке «Инструкция по публикации» в футере. Кроме того, на домене открыты все служебные файлы репозитория: `CLAUDE.md`, `CHANGELOG.md`, `BRANDBOOK.md`, `STRATEGY.md`, `QA_REPORT.md`, `snippets/*.html`. Внешний вид сайта не меняется: все правки в `<head>`, robots.txt и sitemap.
+
+- **robots.txt:** добавлены `Disallow: /*.md$` и `Disallow: /snippets/`. Яндекс выбрасывает закрытые в robots страницы из индекса; ускорить можно через Вебмастер → «Удаление страниц из поиска».
+- **`<meta name="robots" content="noindex,follow">`** в `reports/brand-analytics.html`, `reports/wb-pet-niche.html` и обоих `snippets/*.html`. Отчёты по-прежнему открываются по ссылкам из блока «Примеры отчётов», но больше не попадают в поиск: это сырые отчёты без призыва к заявке, человек из выдачи там теряется.
+- **Превью ссылок:** `og:image` переведён с `assets/og-cover.svg` на `assets/og-cover.png` 1200×630 (отрисован из того же SVG, надпись в плашке «Система вместо хаоса» отцентрована) и добавлены `og:image:width/height`. Telegram, ВКонтакте и MAX SVG не показывают, поэтому ссылки на сайт выходили без картинки. Страницы: главная и три посадочные.
+- **FAQPage на главной** приведён к видимому блоку вопросов: было 7 вопросов из исходного HTML, стало 10 вопросов и ответов дословно из `assets/v2-dom-3-2.js`, который подменяет `#faq` на странице. ⚠️ При правке FAQ главной менять **три места**: `index.html` (`#faq`), `v2-dom-3-2.js` и JSON-LD.
+- **Значок сайта:** к `favicon.svg` добавлены `assets/favicon-120.png` (120×120, рекомендация Яндекса) и `assets/apple-touch-icon.png` (180×180) на всех семи страницах.
+- **sitemap.xml:** `lastmod` главной и посадочных — 2026-10-06 (было 19–21.08).
+
+Не сделано, ждёт решения пользователя: убрать ссылку «Инструкция по публикации» из футера (видимая правка, заморозка до 14.10) и вернуть ключ в видимый H1 главной.
+
+Проверено локально: JSON-LD разбирается (FAQPage 10/5/5/7), на всех девяти страницах (семь основных и два отчёта) ошибок JS и ответов 4xx нет, `meta robots` на месте.
+Файлы: `robots.txt`, `sitemap.xml`, `index.html`, `wildberries.html`, `ozon.html`, `menedzher-marketplejsov.html`, `privacy.html`, `thank-you.html`, `404.html`, `reports/brand-analytics.html`, `reports/wb-pet-niche.html`, `snippets/hidden-sections.html`, `snippets/native-lead-form.html`, `assets/og-cover.png`, `assets/favicon-120.png`, `assets/apple-touch-icon.png`, `CLAUDE.md`, `CHANGELOG.md`
+
 ## 2026-10-05
 
 ### Кнопка «Связаться» в правом нижнем углу открывает меню: позвонить или оставить заявку

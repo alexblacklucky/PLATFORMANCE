@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you.html
+Disallow: /*.md$
+Disallow: /snippets/
 
 Sitemap: https://platformance.ru/sitemap.xml
