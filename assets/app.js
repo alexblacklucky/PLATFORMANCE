@@ -243,18 +243,28 @@
   if (leadDialog && leadCard && typeof leadDialog.show === 'function') {
     const leadHome = leadCard.parentElement;
     const leadSlot = $('.lead-dialog-slot', leadDialog);
-    document.addEventListener('click', e => {
-      const link = e.target.closest('a[href="#audit"]');
-      if (!link) return;
-      e.preventDefault();
-      e.stopPropagation(); // иначе сработает общий обработчик плавной прокрутки к якорю
+    const openLead = () => {
       closeMenu();
       const info = $('[data-info-dialog]');
       if (info?.open) info.close();
       leadSlot.appendChild(leadCard);
       leadDialog.show();
       $('input:not([type="hidden"])', leadCard)?.focus();
+    };
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[href="#audit"]');
+      if (!link) return;
+      e.preventDefault();
+      e.stopPropagation(); // иначе сработает общий обработчик плавной прокрутки к якорю
+      openLead();
     }, true);
+    // Пришли по ссылке с #audit (кнопки заявки на посадочных ведут на index.html#audit) —
+    // сразу открываем окно с формой. Прыжок к якорю на телефоне форму не показывал: сверху
+    // стоит текст блока, а слой v2 после прыжка достраивает страницу и сдвигает её.
+    if (location.hash === '#audit') openLead();
+    window.addEventListener('hashchange', () => {
+      if (location.hash === '#audit' && !leadDialog.open) openLead();
+    });
     $('[data-lead-dialog-close]', leadDialog).addEventListener('click', () => leadDialog.close());
     leadDialog.addEventListener('click', e => { if (e.target === leadDialog) leadDialog.close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && leadDialog.open) leadDialog.close(); });
