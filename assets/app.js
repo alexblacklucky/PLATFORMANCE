@@ -284,23 +284,40 @@
     });
   }
 
-  // Bitrix24-форма заявки: виджет монтируется загрузчиком с CDN в .b24-form-slot.
-  // Если за 8 секунд контейнер виджета так и не появился (блокировщик рекламы,
-  // недоступный CDN) — показываем запасные контакты вместо пустой карточки.
+  // Bitrix24-форма заявки: загрузчик с CDN монтирует виджет в .b24-form-slot.
+  // Виджет приходит за 4 файла, на слабом мобильном интернете это 7–8 секунд. Поэтому:
+  // пока полей нет — в слоте «Загружаем форму…»; запасные контакты показываем, только если
+  // посетитель смотрит на пустую форму (окно открыто или карточка на экране) дольше 5 секунд.
+  // Пришла форма позже — прячем и надпись, и запасной блок. На показ запасного блока
+  // завязана цель Метрики lead_form_fallback (metrika-events.js).
   const b24Slot = $('[data-b24-slot]');
   const b24Fallback = $('[data-b24-fallback]');
+  const b24Loading = $('[data-b24-loading]');
   if (b24Slot && b24Fallback) {
-    let waited = 0;
-    const b24Check = setInterval(() => {
-      if (b24Slot.querySelector('div')) {
-        b24Fallback.hidden = true;
-        b24Slot.classList.remove('is-failed');
-        clearInterval(b24Check);
-      } else if ((waited += 500) >= 8000) {
-        b24Fallback.hidden = false;
-        b24Slot.classList.add('is-failed');
-        clearInterval(b24Check);
-      }
-    }, 500);
+    const b24Ready = () => !!$('input:not([type="hidden"]), textarea', b24Slot);
+    let b24Timer = 0, b24Watch = null, b24Seen = null;
+    const b24Done = () => {
+      clearTimeout(b24Timer);
+      b24Watch?.disconnect();
+      b24Seen?.disconnect();
+      if (b24Loading) b24Loading.hidden = true;
+      b24Fallback.hidden = true;
+      b24Slot.classList.remove('is-failed');
+    };
+    if (b24Ready()) b24Done();
+    else {
+      if (b24Loading) b24Loading.hidden = false;
+      b24Watch = new MutationObserver(() => { if (b24Ready()) b24Done(); });
+      b24Watch.observe(b24Slot, { childList: true, subtree: true });
+      b24Seen = new IntersectionObserver(entries => {
+        clearTimeout(b24Timer);
+        if (!entries[entries.length - 1].isIntersecting) return;
+        b24Timer = setTimeout(() => {
+          b24Fallback.hidden = false;
+          b24Slot.classList.add('is-failed');
+        }, 5000);
+      }, { threshold: .25 });
+      b24Seen.observe(b24Slot.closest('.form-card') || b24Slot);
+    }
   }
 })();
