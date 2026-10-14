@@ -3,33 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<!-- Yandex.Metrika counter -->
+<!-- Счётчики (Яндекс.Метрика + Top.Mail.Ru/VK): тяжёлые скрипты качаем после первого
+     действия посетителя или через 3,5 с после load. Очереди ym/_tmr создаются сразу,
+     поэтому ни один вызов цели не теряется — счётчики разбирают очередь при загрузке. -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111834033','ym');
-
+   m[i].l=1*new Date()})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111834033','ym');
    ym(111834033, 'init', {ssr:true, webvisor:true, clickmap:true, trackLinks:true, accurateTrackBounce:true});
+   var _tmr = window._tmr || (window._tmr = []);
+   _tmr.push({id: "3802153", type: "pageView", start: (new Date()).getTime()});
+   (function(){
+     var fired = false, evs = ['pointerdown','scroll','keydown','touchstart'];
+     function loadCounters(){
+       if (fired) return; fired = true;
+       evs.forEach(function(ev){ removeEventListener(ev, loadCounters); });
+       ['https://mc.yandex.ru/metrika/tag.js?id=111834033','https://top-fwz1.mail.ru/js/code.js'].forEach(function(src){
+         var s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s);
+       });
+     }
+     evs.forEach(function(ev){ addEventListener(ev, loadCounters, {passive:true}); });
+     addEventListener('load', function(){ setTimeout(loadCounters, 3500); });
+   })();
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111834033" style="position:absolute; left:-9999px;" alt=""></div></noscript>
-<!-- /Yandex.Metrika counter -->
-<!-- Top.Mail.Ru counter -->
-<script type="text/javascript">
-var _tmr = window._tmr || (window._tmr = []);
-_tmr.push({id: "3802153", type: "pageView", start: (new Date()).getTime()});
-(function (d, w, id) {
-  if (d.getElementById(id)) return;
-  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
-  ts.src = "https://top-fwz1.mail.ru/js/code.js";
-  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
-  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
-})(document, window, "tmr-code");
-</script>
 <noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3802153;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
-<!-- /Top.Mail.Ru counter -->
-
 <title>PLATFORMANCE — системное ведение маркетплейсов под ключ</title>
 <meta name="description" content="Управление магазином на Wildberries (ВБ) и Ozon (Озон): карточки, поставки, реклама, финансы и развитие в единой системе.">
 <meta name="theme-color" content="#251E63">
@@ -39,9 +36,10 @@ _tmr.push({id: "3802153", type: "pageView", start: (new Date()).getTime()});
 <meta property="og:type" content="website"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="PLATFORMANCE"><meta property="og:title" content="PLATFORMANCE — системное ведение маркетплейсов"><meta property="og:description" content="Команда, которая управляет карточками, поставками, рекламой, финансами и развитием магазина."><meta property="og:url" content="https://platformance.ru/"><meta property="og:image" content="https://platformance.ru/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="assets/styles.css?v=25">
-<!-- Форма заявки Битрикс24 грузит 4 файла по цепочке. Первые два запрашиваем сразу (адреса те же, что строит загрузчик Битрикса), ко второму серверу заранее открываем соединение. Основной пакет не предзагружаем: метку его версии Битрикс меняет при обновлениях -->
+<!-- Форма заявки Битрикс24 (~480 КБ в 4 файлах) грузится лениво: загрузчик стартует,
+     когда посетитель приблизился к форме на 1500px (или перешёл по якорю #audit).
+     Соединения к серверам Битрикса открываем заранее — старт будет быстрым. -->
 <link rel="preconnect" href="https://cdn-ru.bitrix24.ru"><link rel="preconnect" href="https://b24-pdnc01.bitrix24.ru">
-<script>(function(t){var b='https://cdn-ru.bitrix24.ru/b34954568/crm/form/';[b+'loader_4.js?'+(t/18e4|0),b+'app.js?'+(t/864e5|0)].forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='script';l.href=u;document.head.appendChild(l)})})(Date.now())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://platformance.ru/#organization","name":"PLATFORMANCE","legalName":"ИП Чалова Татьяна Владимировна","taxID":"525604029671","identifier":"ОГРНИП 322527500111310","url":"https://platformance.ru/","email":"platformance@internet.ru","telephone":"+79861663700","address":{"@type":"PostalAddress","addressLocality":"Нижний Новгород","addressRegion":"Нижегородская область","postalCode":"603135","streetAddress":"проспект Ленина, д. 45А","addressCountry":"RU"},"sameAs":["https://grown-cetacean-x3xdais.gamma.site/","https://t.me/Platformancepublic","https://max.ru/channel_Platformancepublic","https://vk.com/platformance","https://vc.ru/id6088067","https://workspace.ru/contractors/platformance/","https://yandex.ru/maps/org/platformance/71777039199/","https://2gis.ru/n_novgorod/firm/70000001117310529"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","telephone":"+79861663700","email":"platformance@internet.ru","areaServed":"RU","availableLanguage":"Russian"}},{"@type":"WebSite","url":"https://platformance.ru/","name":"PLATFORMANCE","publisher":{"@id":"https://platformance.ru/#organization"}},{"@type":"Service","name":"Системное ведение маркетплейсов под ключ","provider":{"@id":"https://platformance.ru/#organization"},"areaServed":{"@type":"Country","name":"Россия"},"serviceType":"Управление магазинами на Wildberries и Ozon","hasOfferCatalog":{"@type":"OfferCatalog","name":"Услуги PLATFORMANCE","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Карточки и контент","description":"Структура карточек, характеристики, инфографика и поисковая оптимизация на маркетплейсах"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Поставки и остатки","description":"Прогноз спроса, отгрузки, распределение по складам и контроль оборачиваемости"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Реклама и маркетинг","description":"Кампании, ставки, тесты и связь рекламных расходов с юнит-экономикой"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Цены и финансы","description":"Юнит-экономика, P&L, акции, скидки и прибыльность SKU"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Управление и развитие","description":"Планирование ассортимента, отчётность и координация работы команды"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Выход на маркетплейсы","description":"Запуск магазина на Wildberries и Ozon: кабинет, документы, первые поставки"}}]}},{"@type":"FAQPage","@id":"https://platformance.ru/#faq","mainEntity":[{"@type":"Question","name":"Сколько стоят услуги?","acceptedAnswer":{"@type":"Answer","text":"Стоимость определяется после анализа проекта и зависит от ассортимента, состояния кабинета, количества площадок и объёма задач. До знакомства с проектом мы не называем шаблонную цену."}},{"@type":"Question","name":"Можно ли заказать отдельную услугу?","acceptedAnswer":{"@type":"Answer","text":"Да, когда задача действительно локальная. На разборе мы объясним, можно ли решить её отдельно или причина связана с рекламой, карточками, поставками либо экономикой."}},{"@type":"Question","name":"Работаете ли вы с новым магазином?","acceptedAnswer":{"@type":"Answer","text":"Да, если у проекта есть продукт, ресурсы для запуска и готовность выстраивать экономику, контент, логистику и продвижение как единую систему."}},{"@type":"Question","name":"С какими площадками работаете?","acceptedAnswer":{"@type":"Answer","text":"Основные направления — Wildberries (ВБ) и Ozon (Озон). Другие площадки обсуждаются только при наличии подходящей компетенции и подтверждённого объёма работ."}},{"@type":"Question","name":"Кто будет нашим контактным лицом?","acceptedAnswer":{"@type":"Answer","text":"У проекта есть управляющий, который координирует профильных специалистов, собирает общую картину и остаётся единым контактным лицом для клиента."}},{"@type":"Question","name":"Какие отчёты получает клиент?","acceptedAnswer":{"@type":"Answer","text":"Регулярные отчёты по ключевым изменениям, рекламе, остаткам и ассортименту, а также ежемесячный финансовый разбор и обновление плана развития."}},{"@type":"Question","name":"Нужен ли доступ к кабинету?","acceptedAnswer":{"@type":"Answer","text":"Для полноценного аудита и ведения необходимы рабочие доступы к данным проекта. Их объём и порядок передачи фиксируются на этапе онбординга."}},{"@type":"Question","name":"Как быстро начинается работа?","acceptedAnswer":{"@type":"Answer","text":"Срок старта зависит от готовности данных, доступов и согласования договора. После онбординга команда формирует первичный план и запускает регулярный рабочий цикл."}},{"@type":"Question","name":"Работаете ли вы по договору?","acceptedAnswer":{"@type":"Answer","text":"Да. Формат, состав работ, ответственность, коммуникация и порядок оплаты фиксируются до начала работы."}},{"@type":"Question","name":"Даёте ли вы гарантии роста?","acceptedAnswer":{"@type":"Answer","text":"Мы не обещаем конкретный оборот до анализа. Мы отвечаем за прозрачный процесс, регламент, расчёты, качество исполнения и обоснованность управленческих решений."}}]}]}</script>
 <script src="assets/config.js?v=25" defer></script><script src="assets/app.js?v=25" defer></script>
 </head>
@@ -186,13 +184,13 @@ _tmr.push({id: "3802153", type: "pageView", start: (new Date()).getTime()});
     <div class="section-head split reveal"><div><span class="eyebrow">Кейсы в цифрах</span><h2>Скриншоты кабинетов проектов, которые мы ведём</h2></div><p>Листайте влево-вправо: это реальные графики продаж из личных кабинетов Wildberries и Ozon.</p></div>
     <div class="case-slider reveal" data-case-slider>
       <div class="cs-track" data-cs-track>
-        <figure class="cs-slide"><a href="assets/cases/case-home-wb.png" target="_blank" rel="noopener"><img src="assets/cases/case-home-wb.png" alt="Кейс: товары для дома на Wildberries, два года работы с нуля — воронка продаж и заказы на 23,6 млн ₽ за квартал" loading="lazy"></a><figcaption>Товары для дома · Wildberries — два года работы с нуля</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-shoes-ozon.png" target="_blank" rel="noopener"><img src="assets/cases/case-shoes-ozon.png" alt="Кейс: обувь на Ozon — результат за 3 месяца, старт с 1 млн ₽" loading="lazy"></a><figcaption>Обувь · Ozon — результат за 3 месяца, старт с 1 млн ₽</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-cosmetics-wb.png" target="_blank" rel="noopener"><img src="assets/cases/case-cosmetics-wb.png" alt="Кейс: ниша косметики на Wildberries — только три месяца работы" loading="lazy"></a><figcaption>Косметика · Wildberries — только три месяца работы</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-food-ozon.png" target="_blank" rel="noopener"><img src="assets/cases/case-food-ozon.png" alt="Кейс: продукты питания на Ozon — 3 месяца, старт с 1,5 млн ₽" loading="lazy"></a><figcaption>Продукты питания · Ozon — 3 месяца, старт с 1,5 млн ₽</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-home-ozon.png" target="_blank" rel="noopener"><img src="assets/cases/case-home-ozon.png" alt="Кейс: товары для дома на Ozon — 6 месяцев работы, старт с 500 тыс. ₽" loading="lazy"></a><figcaption>Товары для дома · Ozon — 6 месяцев работы, старт с 500 тыс. ₽</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-furniture-ozon.png" target="_blank" rel="noopener"><img src="assets/cases/case-furniture-ozon.png" alt="Кейс: мебель на Ozon — 1,5 месяца работы, существенно подняли цены" loading="lazy"></a><figcaption>Мебель · Ozon — 1,5 месяца работы, существенно подняли цены</figcaption></figure>
-        <figure class="cs-slide"><a href="assets/cases/case-auto-wb.png" target="_blank" rel="noopener"><img src="assets/cases/case-auto-wb.png" alt="Кейс: автотовары на Wildberries — старт с нуля" loading="lazy"></a><figcaption>Автотовары · Wildberries — старт с нуля</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-home-wb.webp" target="_blank" rel="noopener"><img src="assets/cases/case-home-wb.webp" width="1904" height="908" decoding="async" alt="Кейс: товары для дома на Wildberries, два года работы с нуля — воронка продаж и заказы на 23,6 млн ₽ за квартал" loading="lazy"></a><figcaption>Товары для дома · Wildberries — два года работы с нуля</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-shoes-ozon.webp" target="_blank" rel="noopener"><img src="assets/cases/case-shoes-ozon.webp" width="1904" height="938" decoding="async" alt="Кейс: обувь на Ozon — результат за 3 месяца, старт с 1 млн ₽" loading="lazy"></a><figcaption>Обувь · Ozon — результат за 3 месяца, старт с 1 млн ₽</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-cosmetics-wb.webp" target="_blank" rel="noopener"><img src="assets/cases/case-cosmetics-wb.webp" width="1904" height="846" decoding="async" alt="Кейс: ниша косметики на Wildberries — только три месяца работы" loading="lazy"></a><figcaption>Косметика · Wildberries — только три месяца работы</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-food-ozon.webp" target="_blank" rel="noopener"><img src="assets/cases/case-food-ozon.webp" width="1904" height="954" decoding="async" alt="Кейс: продукты питания на Ozon — 3 месяца, старт с 1,5 млн ₽" loading="lazy"></a><figcaption>Продукты питания · Ozon — 3 месяца, старт с 1,5 млн ₽</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-home-ozon.webp" target="_blank" rel="noopener"><img src="assets/cases/case-home-ozon.webp" width="1904" height="954" decoding="async" alt="Кейс: товары для дома на Ozon — 6 месяцев работы, старт с 500 тыс. ₽" loading="lazy"></a><figcaption>Товары для дома · Ozon — 6 месяцев работы, старт с 500 тыс. ₽</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-furniture-ozon.webp" target="_blank" rel="noopener"><img src="assets/cases/case-furniture-ozon.webp" width="1904" height="914" decoding="async" alt="Кейс: мебель на Ozon — 1,5 месяца работы, существенно подняли цены" loading="lazy"></a><figcaption>Мебель · Ozon — 1,5 месяца работы, существенно подняли цены</figcaption></figure>
+        <figure class="cs-slide"><a href="assets/cases/case-auto-wb.webp" target="_blank" rel="noopener"><img src="assets/cases/case-auto-wb.webp" width="1904" height="955" decoding="async" alt="Кейс: автотовары на Wildberries — старт с нуля" loading="lazy"></a><figcaption>Автотовары · Wildberries — старт с нуля</figcaption></figure>
       </div>
       <button class="cs-btn cs-prev" data-cs-prev aria-label="Предыдущий кейс"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
       <button class="cs-btn cs-next" data-cs-next aria-label="Следующий кейс"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
@@ -227,7 +225,9 @@ _tmr.push({id: "3802153", type: "pageView", start: (new Date()).getTime()});
     </div>
     <div class="form-card reveal delay-1"><div class="form-card-head"><span>Заявка на разбор</span><h2>Расскажите о проекте</h2><p>Поля со звёздочкой обязательны.</p></div>
       <div class="b24-form-slot" data-b24-slot>
-        <script data-b24-form="inline/4/btnjoi" data-skip-moving="true">(function(w,d,u){var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);})(window,document,'https://cdn-ru.bitrix24.ru/b34954568/crm/form/loader_4.js');</script>
+        <script data-b24-form="inline/4/btnjoi" data-skip-moving="true">(function(){var tag=document.currentScript,started=false;function go(){if(started)return;started=true;(function(w,d,u){var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);})(window,document,'https://cdn-ru.bitrix24.ru/b34954568/crm/form/loader_4.js')}
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){io.disconnect();go();break}}},{rootMargin:'1500px'});io.observe(tag.parentNode)}else{go()}
+addEventListener('hashchange',function(){if(location.hash==='#audit')go()});if(location.hash==='#audit')go();})();</script>
         <p class="b24-loading" data-b24-loading hidden>Загружаем форму…</p>
       </div>
       <div class="b24-fallback" data-b24-fallback hidden><p><b>Форма загружается дольше обычного.</b> Можно не ждать — позвоните или напишите нам, разберём проект так же бесплатно:</p><p class="b24-fallback-links"><a href="tel:+79861663700">+7 (986) 166-37-00</a><a href="mailto:platformance@internet.ru">platformance@internet.ru</a></p></div>
