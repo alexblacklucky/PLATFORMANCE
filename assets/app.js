@@ -330,4 +330,20 @@
       b24Seen.observe(b24Slot.closest('.form-card') || b24Slot);
     }
   }
+
+  // Мобильная галерея кейсов: открывается кнопкой «Смотреть кейсы» в блоке m-results
+  const mGal = $('[data-m-gallery]');
+  if (mGal) {
+    const mRail = $('[data-m-gal-rail]', mGal);
+    const mCount = $('[data-m-gal-count]', mGal);
+    const mTotal = $$('figure', mRail).length;
+    const mOpen = () => { mGal.hidden = false; document.documentElement.classList.add('m-gal-lock'); };
+    const mClose = () => { mGal.hidden = true; document.documentElement.classList.remove('m-gal-lock'); };
+    $$('[data-m-gallery-open]').forEach(b => b.addEventListener('click', mOpen));
+    $('[data-m-gal-close]', mGal)?.addEventListener('click', mClose);
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !mGal.hidden) mClose(); });
+    mRail?.addEventListener('scroll', () => {
+      if (mCount) mCount.textContent = `${Math.min(mTotal, Math.round(mRail.scrollLeft / mRail.clientWidth) + 1)} / ${mTotal}`;
+    }, {passive: true});
+  }
 })();
