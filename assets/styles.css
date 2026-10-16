@@ -62,3 +62,44 @@
 @media(max-width:880px){.social-bar .container{flex-direction:column;align-items:flex-start}}
 .footer-col .btn-light,.footer-col .btn-light:hover{color:#251e63}
 .floating-menu{position:fixed;right:20px;bottom:82px;z-index:901;width:min(270px,calc(100vw - 32px));display:grid;gap:4px;padding:8px;background:#fff;border:1px solid #e6e2f5;border-radius:18px;box-shadow:0 24px 60px rgba(37,30,99,.22);animation:floatMenuIn .16s ease-out}.floating-menu[hidden]{display:none}.floating-menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:#251e63;text-decoration:none}.floating-menu a:hover,.floating-menu a:focus-visible{background:#f4f1ff}.floating-menu i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#6548e8;color:#fff;flex:none}.floating-menu svg{width:18px;height:18px;stroke-width:1.8}.floating-menu b{display:block;font-size:15px;line-height:1.3}.floating-menu small{display:block;font-size:12.5px;line-height:1.35;color:#6d6882}@keyframes floatMenuIn{from{opacity:0;transform:translateY(8px)}}@media(prefers-reduced-motion:reduce){.floating-menu{animation:none}}
+/* ===== Мобильная упрощённая версия главной (утверждена пользователем 16.10.2026).
+   Блоки .m-only видны только до 767px; тяжёлые десктопные секции на этой ширине скрыты.
+   Десктоп (от 768px) не меняется. ===== */
+.m-only{display:none}
+@media(max-width:767px){
+.m-hide,#problems,#system,#services,#audience,#team,#reports,#case-gallery,#comparison,#faq,.signal-strip,.social-bar,.cta-band,.floating-contact,.floating-menu,.hero-stats,.audit-points,.audit-deliverable,.safe-step{display:none!important}
+body{padding-bottom:78px}
+section.m-only{display:block;padding:26px 0 4px}
+a.m-only.btn{display:flex}
+.cookie-banner{bottom:calc(84px + env(safe-area-inset-bottom))!important}
+.m-numgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.m-num{border:1px solid #e5e0f2;border-radius:16px;padding:14px}
+.m-num>b{font-size:23px;letter-spacing:-.03em;display:block;line-height:1.15}
+.m-num>span{font-size:12px;color:#5f5979;line-height:1.35;display:block;margin-top:3px}
+.m-num-wide{grid-column:1/-1;background:#f7f6fb;border-color:transparent;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.m-num-wide>span{font-size:13px;margin:0}
+.m-num-wide>span b{font-size:16px}
+.m-num-wide button{border:0;background:none;color:#6548e8;font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer;padding:6px 0}
+.m-svcgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.m-svc-item{display:flex;align-items:center;gap:9px;border:1px solid #e5e0f2;border-radius:13px;padding:11px 12px;font-size:13px;font-weight:700}
+.m-svc-item i{flex:none;width:30px;height:30px;border-radius:9px;background:#f0edff;color:#6548e8;display:grid;place-items:center}
+.m-svc-item i svg{width:16px;height:16px;stroke-width:1.8}
+.m-steps-card{background:#251e63;border-radius:18px;padding:20px;color:#fff}
+.m-step{display:flex;gap:12px;padding:9px 0;align-items:baseline}
+.m-step>b{flex:none;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:12px;transform:translateY(4px)}
+.m-step>div{font-size:14.5px;line-height:1.4}
+.m-step small{display:block;color:#b4acdd;font-size:12.5px}
+.m-sticky{position:fixed;left:0;right:0;bottom:0;z-index:1050;display:grid;grid-template-columns:1fr 1.2fr;gap:9px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-top:1px solid #e5e0f2}
+.m-sticky .btn{min-height:48px;font-size:14.5px;padding:11px}
+.m-gallery{position:fixed;inset:0;z-index:1150;background:#17123d;display:flex;flex-direction:column}
+.m-gallery[hidden]{display:none}
+.m-gal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;color:#fff;font-size:14px}
+.m-gal-head [data-m-gal-close]{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer}
+.m-gal-rail{flex:1;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 14px 10px;scrollbar-width:none;align-items:center;-webkit-overflow-scrolling:touch}
+.m-gal-rail::-webkit-scrollbar{display:none}
+.m-gal-rail figure{flex:0 0 100%;scroll-snap-align:center;margin:0}
+.m-gal-rail img{width:100%;height:auto;border-radius:12px;background:#fff}
+.m-gal-rail figcaption{color:#cfc8ef;font-size:13px;font-weight:700;text-align:center;padding:12px 6px 0}
+.m-gal-count{text-align:center;color:#9d93d0;font-size:12px;font-weight:800;padding:0 0 16px}
+.m-gal-lock{overflow:hidden}
+}
